@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gemini Large Context"
+  short_description: "Use Gemini CLI for large-context codebase analysis"
+  default_prompt: "Use $gemini-large-context to analyze this codebase with Gemini CLI and return structured JSON context."
