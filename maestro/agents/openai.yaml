@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maestro"
+  short_description: "Build and debug Maestro UI flows"
+  default_prompt: "Use $maestro to create, run, or debug Maestro mobile UI test flows for this app."

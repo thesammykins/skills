@@ -1,0 +1,4 @@
+interface:
+  display_name: "Convert Prompt"
+  short_description: "Rewrite prompts before acting"
+  default_prompt: "Use $convert-prompt to rewrite this prompt before acting: [paste prompt here]"
