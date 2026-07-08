@@ -1,0 +1,67 @@
+[defaults]
+install_root = "~/.agents/skills"
+system_installer = "~/.agents/skills/.system/skill-installer/scripts/install-skill-from-github.py"
+
+[profiles]
+core = ["convert-prompt", "gemini-large-context", "maestro"]
+apple = [
+  "swift-concurrency-pro",
+  "swift-testing-pro",
+  "swiftdata-pro",
+  "core-data-expert",
+  "xcode-build-optimization",
+]
+agent-dev = ["convert-prompt", "gemini-large-context", "maestro"]
+
+[skills.convert-prompt]
+source = "local"
+path = "convert-prompt"
+description = "Rewrite prompts for agent-friendly execution."
+
+[skills.gemini-large-context]
+source = "local"
+path = "gemini-large-context"
+description = "Large-context repo analysis through Gemini CLI wrappers."
+
+[skills.maestro]
+source = "local"
+path = "maestro"
+description = "Maestro mobile UI flow authoring and validation."
+
+[skills.swift-concurrency-pro]
+source = "github"
+repo = "twostraws/Swift-Concurrency-Agent-Skill"
+paths = ["swift-concurrency-pro"]
+description = "Swift async/await, actors, Sendable, and Swift 6 migration guidance."
+
+[skills.swift-testing-pro]
+source = "github"
+repo = "twostraws/Swift-Testing-Agent-Skill"
+paths = ["swift-testing-pro"]
+description = "Swift Testing macros, parameterized tests, and XCTest migration guidance."
+
+[skills.swiftdata-pro]
+source = "github"
+repo = "twostraws/SwiftData-Agent-Skill"
+paths = ["swiftdata-pro"]
+description = "SwiftData models, queries, migrations, and CloudKit sync guidance."
+
+[skills.core-data-expert]
+source = "github"
+repo = "AvdLee/Core-Data-Agent-Skill"
+paths = ["core-data-expert"]
+description = "Core Data stack setup, fetches, background contexts, and migrations."
+
+[skills.xcode-build-optimization]
+source = "github"
+repo = "AvdLee/Xcode-Build-Optimization-Agent-Skill"
+paths = [
+  "skills/xcode-build-benchmark",
+  "skills/xcode-compilation-analyzer",
+  "skills/xcode-project-analyzer",
+  "skills/spm-build-analysis",
+  "skills/xcode-build-orchestrator",
+  "skills/xcode-build-fixer",
+]
+description = "Swift/Xcode build benchmarking, analysis, orchestration, and repair skills."
+
