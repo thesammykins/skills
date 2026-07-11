@@ -1,45 +1,34 @@
 # Skills
 
-Curated agent skills for Samantha's Macs.
+Complete, attested global skill inventory for Samantha's Macs.
 
-This repo has two jobs:
+The repository contains 86 vendored local/customized skills under `skills/` and a pinned manifest for 27 upstream-installed skills. Together they reproduce all 113 canonical shared skills. Codex-managed `.system` skills and the empty historical `jenkins-workflows 2` duplicate are intentionally excluded.
 
-1. Store first-party or locally customized skills.
-2. Declare pinned upstream skill sources that should be installed into `$HOME/.agents/skills`.
-3. Catalog the complete attested skill inventory from the primary Mac.
+## Use
 
-It is not a dump of every installed skill. If an upstream skill is used as-is, keep it in `skills.toml` and install it from the source repo. Vendor a third-party skill here only after making local changes, and record the upstream source in the manifest.
-
-## Install
+Normal setup and updates run through [`thesammykins/new-mac`](https://github.com/thesammykins/new-mac):
 
 ```bash
-python3 scripts/install-skills.py --profile core --dry-run
-python3 scripts/install-skills.py --profile core,apple,current-known
+cd ~/Development/new-mac
+./setup.sh
 ```
 
-Profiles:
-
-- `core`: local custom skills that are useful on every Mac.
-- `apple`: Swift/iOS/macOS skills installed from upstream.
-- `agent-dev`: agent-development skills from this repo.
-- `current-known`: upstream skills whose source and exact content were attested on the primary Mac.
-
-`new-mac` calls this installer from its profile-driven setup flow.
-
-## Validate
+Direct maintenance remains available:
 
 ```bash
-python3 scripts/install-skills.py --check
-python3 scripts/install-skills.py --profile core --verify
+mise run check
+mise run install -- --dry-run
+mise run verify
 ```
 
-## Policy
+`scripts/install-skills.py` installs every vendored skill in one local `npx skills@1.5.16` operation, then installs upstream skills grouped by pinned repository commit. Installation is additive and never prunes existing directories.
 
-- Local custom skills live at the repo root, for example `convert-prompt/`.
-- Upstream skills stay upstream unless customized.
-- Installs target `$HOME/.agents/skills` by default.
-- GitHub skills are installed with pinned `npx skills@1.5.16` sources.
-- `inventory.toml` records all 104 captured directories: 103 canonical skills and one duplicate.
-- Unresolved third-party content stays in the private recovery archive until its source and redistribution rights are established.
-- Installation is additive; this repository never prunes an existing global skill.
-- Official Codex plugin skills stay in the Codex plugin cache; this repo does not vendor them.
+## Ownership
+
+- `skills/<name>/`: locally maintained, customized, or unresolved vendored content.
+- `skills.toml`: pinned upstream sources only.
+- `inventory.toml`: complete desired-state catalog, hashes, categories, provenance, and license state.
+- `PROVENANCE.md`: policy and disclosure for unresolved imports.
+- `THIRD_PARTY_NOTICES.md`: known third-party notices for customized content.
+
+When an unresolved vendored skill is proven byte-identical to a redistributable upstream source, replace its vendored directory with a pinned manifest entry in the same commit.

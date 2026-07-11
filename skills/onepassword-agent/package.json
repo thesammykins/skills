@@ -1,0 +1,8 @@
+{
+  "name": "onepassword-agent-skill",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@1password/sdk": "0.4.0"
+  }
+}

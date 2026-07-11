@@ -2,13 +2,13 @@
 python = "3.13.12"
 
 [tasks.check]
-description = "Validate the skills manifest."
-run = "python3 scripts/install-skills.py --check"
+description = "Validate the complete skills catalog and vendored hashes."
+run = "python3 scripts/install-skills.py --check && python3 -m unittest discover -s tests -v"
 
 [tasks.install]
-description = "Install selected skills into ~/.agents/skills."
+description = "Install every vendored and pinned upstream skill."
 run = "python3 scripts/install-skills.py \"$@\""
 
-[tasks.dry-run]
-description = "Preview core and Apple skill installation."
-run = "python3 scripts/install-skills.py --profile core,apple --dry-run"
+[tasks.verify]
+description = "Verify ~/.agents/skills against the desired catalog."
+run = "python3 scripts/install-skills.py --verify \"$@\""
