@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jenkins Workflows"
+  short_description: "Run workflows on Jenkins instead of local Mac"
+  default_prompt: "Use $jenkins-workflows to move this build, test, or deployment workflow onto Jenkins."

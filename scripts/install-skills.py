@@ -9,12 +9,24 @@ import subprocess
 import sys
 import tempfile
 import tomllib
+from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = REPO_ROOT / "skills.toml"
+VALID_CATEGORIES = {
+    "apple-platform",
+    "ci-release",
+    "quality-security",
+    "agent-development",
+    "web-api-design",
+    "general-tooling",
+}
+VALID_PROVENANCE = {"unresolved", "verified-upstream", "verified-local", "customized-upstream"}
+VALID_LICENSE_STATUS = {"unresolved", "upstream", "included"}
+VALID_CUSTOMIZATION_STATUS = {"unknown", "none", "local", "customized"}
 
 
 def load_toml(path: Path) -> dict[str, Any]:
@@ -24,10 +36,6 @@ def load_toml(path: Path) -> dict[str, Any]:
 
 def expand_path(value: str) -> Path:
     return Path(value).expanduser().resolve()
-
-
-def split_csv(values: list[str]) -> list[str]:
-    return [item.strip() for value in values for item in value.split(",") if item.strip()]
 
 
 def tree_digest(root: Path) -> str:
@@ -43,180 +51,163 @@ def tree_digest(root: Path) -> str:
     return digest.hexdigest()
 
 
-def selected_skills(manifest: dict[str, Any], profiles: list[str], only: list[str]) -> list[str]:
-    skills = manifest.get("skills", {})
-    names = only[:]
-    if not names:
-        for profile in profiles:
-            if profile not in manifest.get("profiles", {}):
-                valid = ", ".join(sorted(manifest.get("profiles", {})))
-                raise SystemExit(f"Unknown profile '{profile}'. Expected one of: {valid}")
-            names.extend(manifest["profiles"][profile])
-    ordered = list(dict.fromkeys(names))
-    missing = [name for name in ordered if name not in skills]
-    if missing:
-        raise SystemExit(f"Unknown skills: {', '.join(missing)}")
-    return ordered
+def catalog(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    path = REPO_ROOT / str(manifest["defaults"].get("catalog", "inventory.toml"))
+    return load_toml(path).get("skill", [])
 
 
-def destinations(name: str, spec: dict[str, Any], root: Path) -> list[Path]:
-    if spec["source"] == "local":
-        return [root / str(spec.get("install_as", name))]
-    return [root / Path(path).name for path in spec["paths"]]
+def npx_command(package: str, source: str, skill_names: list[str], *, full_depth: bool = False) -> list[str]:
+    command = ["npx", "--yes", package, "add", source, "--global", "--agent", "*", "--skill", *skill_names, "--yes", "--copy"]
+    if full_depth:
+        command.append("--full-depth")
+    return command
 
 
-def install_local(name: str, spec: dict[str, Any], root: Path, dry_run: bool) -> list[Path]:
-    source = REPO_ROOT / str(spec["path"])
-    destination = destinations(name, spec, root)[0]
-    if dry_run:
-        print(f"[dry-run] copy {source} -> {destination}")
-    else:
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(source, destination, dirs_exist_ok=True)
-        print(f"installed local skill {name} -> {destination}")
-    return [destination]
+def grouped_upstream(manifest: dict[str, Any]) -> list[tuple[str, str, list[str]]]:
+    groups: dict[tuple[str, str], list[str]] = defaultdict(list)
+    for spec in manifest.get("upstream", {}).values():
+        groups[(spec["repo"], spec["ref"])].extend(Path(path).name for path in spec["paths"])
+    return [(repo, ref, list(dict.fromkeys(names))) for (repo, ref), names in groups.items()]
 
 
-def npx_command(package: str, spec: dict[str, Any]) -> list[str]:
-    source = f"{spec['repo']}@{spec['ref']}"
-    skill_names = [Path(path).name for path in spec["paths"]]
-    return ["npx", "--yes", package, "add", source, "--global", "--agent", "*", "--skill", *skill_names, "--yes"]
+def copy_from_npx_home(home: Path, install_root: Path, mappings: list[tuple[str, str]]) -> None:
+    source_root = home / ".agents/skills"
+    install_root.mkdir(parents=True, exist_ok=True)
+    for installed_name, directory in mappings:
+        source = source_root / installed_name
+        if not (source / "SKILL.md").exists():
+            raise SystemExit(f"npx did not produce expected skill: {source}")
+        shutil.copytree(source, install_root / directory, dirs_exist_ok=True)
 
 
-def install_github(name: str, spec: dict[str, Any], root: Path, package: str, dry_run: bool) -> list[Path]:
-    command = npx_command(package, spec)
-    expected = destinations(name, spec, root)
+def run_install(command: list[str], install_root: Path, mappings: list[tuple[str, str]], dry_run: bool) -> None:
     if dry_run:
         print("[dry-run] " + " ".join(command))
-        return expected
-
-    default_root = expand_path("~/.agents/skills")
-    if root == default_root:
-        subprocess.run(command, check=True)
-        return expected
-
-    with tempfile.TemporaryDirectory(prefix="skills-install-home-") as temp:
-        env = os.environ.copy()
-        env["HOME"] = temp
-        subprocess.run(command, check=True, env=env)
-        staged = Path(temp) / ".agents/skills"
-        root.mkdir(parents=True, exist_ok=True)
-        for destination in expected:
-            source = staged / destination.name
-            if not source.exists():
-                raise SystemExit(f"npx did not produce expected skill: {source}")
-            shutil.copytree(source, destination, dirs_exist_ok=True)
-    return expected
-
-
-def verify_one(name: str, spec: dict[str, Any], paths: list[Path]) -> list[str]:
-    problems: list[str] = []
-    for path in paths:
-        if not (path / "SKILL.md").exists():
-            problems.append(f"{name}: missing {path}/SKILL.md")
-    expected = spec.get("expected_sha256")
-    if expected and len(paths) == 1 and paths[0].exists():
-        actual = tree_digest(paths[0])
-        if actual != expected:
-            problems.append(f"{name}: hash mismatch, expected {expected}, got {actual}")
-    return problems
-
-
-def check_manifest(manifest: dict[str, Any]) -> None:
-    problems: list[str] = []
-    seen_destinations: dict[str, str] = {}
-    skills = manifest.get("skills", {})
-    for name, spec in skills.items():
-        source = spec.get("source")
-        if source not in {"local", "github"}:
-            problems.append(f"{name}: unsupported source {source!r}")
-            continue
-        if source == "local":
-            path = REPO_ROOT / str(spec.get("path", ""))
-            if not (path / "SKILL.md").exists():
-                problems.append(f"{name}: local path missing SKILL.md")
-            if spec.get("expected_sha256") and path.exists() and tree_digest(path) != spec["expected_sha256"]:
-                problems.append(f"{name}: vendored content hash differs from manifest")
-            names = [str(spec.get("install_as", name))]
-        else:
-            if not spec.get("repo") or not spec.get("ref") or not spec.get("paths"):
-                problems.append(f"{name}: github entries require repo, ref, and paths")
-            names = [Path(path).name for path in spec.get("paths", [])]
-        for destination in names:
-            owner = seen_destinations.setdefault(destination, name)
-            if owner != name:
-                problems.append(f"duplicate install name {destination}: {owner}, {name}")
-
-    for profile, entries in manifest.get("profiles", {}).items():
-        for entry in entries:
-            if entry not in skills:
-                problems.append(f"profile {profile}: unknown skill {entry}")
-
-    catalog_path = REPO_ROOT / str(manifest["defaults"].get("catalog", "inventory.toml"))
-    if not catalog_path.exists():
-        problems.append(f"missing catalog: {catalog_path}")
-    else:
-        catalog = load_toml(catalog_path)
-        directories = [entry.get("directory") for entry in catalog.get("skill", [])]
-        if len(directories) != len(set(directories)):
-            problems.append("catalog contains duplicate directories")
-
-    if problems:
-        print("skills manifest check failed:")
-        for problem in problems:
-            print(f"  - {problem}")
-        raise SystemExit(1)
-    print("skills manifest checks passed")
-
-
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Install curated skills into ~/.agents/skills.")
-    parser.add_argument("--profile", action="append", default=[])
-    parser.add_argument("--only", action="append", default=[])
-    parser.add_argument("--install-root")
-    parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--check", action="store_true")
-    parser.add_argument("--verify", action="store_true")
-    return parser
-
-
-def main() -> None:
-    args = build_parser().parse_args()
-    manifest = load_toml(MANIFEST)
-    if args.check:
-        check_manifest(manifest)
         return
+    with tempfile.TemporaryDirectory(prefix="skills-install-home-") as temporary:
+        home = Path(temporary)
+        env = os.environ.copy()
+        env["HOME"] = str(home)
+        subprocess.run(command, check=True, env=env)
+        copy_from_npx_home(home, install_root, mappings)
 
-    profiles = split_csv(args.profile) or ["core"]
-    names = selected_skills(manifest, profiles, split_csv(args.only))
-    root = expand_path(args.install_root or manifest["defaults"]["install_root"])
+
+def install(manifest: dict[str, Any], install_root: Path, dry_run: bool) -> None:
+    entries = catalog(manifest)
     package = str(manifest["defaults"]["npx_package"])
+    vendored = [entry for entry in entries if entry["source_type"] == "vendored"]
+    vendored_names = [entry["install_name"] for entry in vendored]
+    vendored_mappings = [(entry["install_name"], entry["directory"]) for entry in vendored]
+    run_install(npx_command(package, str(REPO_ROOT), vendored_names, full_depth=True), install_root, vendored_mappings, dry_run)
+    for repo, ref, names in grouped_upstream(manifest):
+        run_install(npx_command(package, f"{repo}@{ref}", names), install_root, [(name, name) for name in names], dry_run)
+    if not dry_run:
+        verify(manifest, install_root)
+
+
+def verify(manifest: dict[str, Any], install_root: Path) -> None:
     problems: list[str] = []
-    if not args.verify:
-        for name in names:
-            spec = manifest["skills"][name]
-            if spec["source"] == "local":
-                install_local(name, spec, root, args.dry_run)
-
-        groups: dict[tuple[str, str], list[str]] = {}
-        for name in names:
-            spec = manifest["skills"][name]
-            if spec["source"] == "github":
-                groups.setdefault((spec["repo"], spec["ref"]), []).extend(spec["paths"])
-        for (repo, ref), paths in groups.items():
-            install_github(repo, {"source": "github", "repo": repo, "ref": ref, "paths": list(dict.fromkeys(paths))}, root, package, args.dry_run)
-
-    if not args.dry_run:
-        for name in names:
-            spec = manifest["skills"][name]
-            problems.extend(verify_one(name, spec, destinations(name, spec, root)))
+    for entry in catalog(manifest):
+        path = install_root / entry["directory"]
+        if not (path / "SKILL.md").exists():
+            problems.append(f"{entry['directory']}: missing SKILL.md")
+        elif tree_digest(path) != entry["sha256"]:
+            problems.append(f"{entry['directory']}: content hash differs from inventory")
     if problems:
         print("skills verification failed:", file=sys.stderr)
         for problem in problems:
             print(f"  - {problem}", file=sys.stderr)
         raise SystemExit(1)
-    if not args.dry_run:
-        print(f"verified {sum(len(destinations(name, manifest['skills'][name], root)) for name in names)} installed skill directories")
+    print(f"verified {len(catalog(manifest))} canonical skill directories")
+
+
+def check(manifest: dict[str, Any]) -> None:
+    entries = catalog(manifest)
+    problems: list[str] = []
+    directories = [entry.get("directory") for entry in entries]
+    install_names = [entry.get("install_name") for entry in entries]
+    vendored = [entry for entry in entries if entry.get("source_type") == "vendored"]
+    upstream = [entry for entry in entries if entry.get("source_type") == "github"]
+    expected_upstream = {
+        Path(path).name: (name, spec["repo"], spec["ref"], path)
+        for name, spec in manifest.get("upstream", {}).items()
+        for path in spec.get("paths", [])
+    }
+    if len(entries) != 113 or len(vendored) != 86 or len(upstream) != 27:
+        problems.append(f"expected 113 desired skills (86 vendored, 27 upstream), got {len(entries)} ({len(vendored)}, {len(upstream)})")
+    if len(directories) != len(set(directories)):
+        problems.append("catalog contains duplicate directories")
+    if len(install_names) != len(set(install_names)):
+        problems.append("catalog contains duplicate install names")
+    vendored_on_disk = {
+        path.name for path in (REPO_ROOT / "skills").iterdir() if path.is_dir() and (path / "SKILL.md").is_file()
+    }
+    if vendored_on_disk != {entry["directory"] for entry in vendored}:
+        problems.append("skills/ directories differ from the vendored catalog")
+    for entry in entries:
+        required = (
+            "directory",
+            "install_name",
+            "category",
+            "sha256",
+            "source_type",
+            "provenance",
+            "customization_status",
+            "license_status",
+        )
+        if not all(entry.get(key) for key in required):
+            problems.append(f"{entry.get('directory', '<unknown>')}: incomplete catalog entry")
+            continue
+        if entry["category"] not in VALID_CATEGORIES:
+            problems.append(f"{entry['directory']}: unknown category {entry['category']!r}")
+        if entry["provenance"] not in VALID_PROVENANCE:
+            problems.append(f"{entry['directory']}: unknown provenance {entry['provenance']!r}")
+        if entry["license_status"] not in VALID_LICENSE_STATUS:
+            problems.append(f"{entry['directory']}: unknown license status {entry['license_status']!r}")
+        if entry["customization_status"] not in VALID_CUSTOMIZATION_STATUS:
+            problems.append(f"{entry['directory']}: unknown customization status {entry['customization_status']!r}")
+        if entry["source_type"] == "vendored":
+            path = REPO_ROOT / entry["path"]
+            if not (path / "SKILL.md").exists():
+                problems.append(f"{entry['directory']}: vendored SKILL.md missing")
+            elif tree_digest(path) != entry["sha256"]:
+                problems.append(f"{entry['directory']}: vendored content hash differs")
+        elif entry["source_type"] == "github":
+            expected = expected_upstream.get(entry["directory"])
+            actual = (entry.get("upstream_entry"), entry.get("upstream_repo"), entry.get("upstream_ref"), entry.get("upstream_path"))
+            if expected != actual:
+                problems.append(f"{entry['directory']}: upstream catalog and manifest differ")
+        else:
+            problems.append(f"{entry['directory']}: unsupported source_type {entry['source_type']!r}")
+    if any(entry.get("provenance") == "unresolved" for entry in entries) and not (REPO_ROOT / "PROVENANCE.md").is_file():
+        problems.append("PROVENANCE.md is required while unresolved skills are vendored")
+    if problems:
+        print("skills checks failed:")
+        for problem in problems:
+            print(f"  - {problem}")
+        raise SystemExit(1)
+    print("skills checks passed: 113 desired, 86 vendored, 27 pinned upstream")
+
+
+def parser() -> argparse.ArgumentParser:
+    result = argparse.ArgumentParser(description="Install or verify the complete global skill inventory.")
+    result.add_argument("--install-root")
+    result.add_argument("--dry-run", action="store_true")
+    result.add_argument("--check", action="store_true")
+    result.add_argument("--verify", action="store_true")
+    return result
+
+
+def main() -> None:
+    args = parser().parse_args()
+    manifest = load_toml(MANIFEST)
+    root = expand_path(args.install_root or "~/.agents/skills")
+    if args.check:
+        check(manifest)
+    elif args.verify:
+        verify(manifest, root)
+    else:
+        install(manifest, root, args.dry_run)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Buildkite Pipeline Setup"
+  short_description: "Set up high-quality Buildkite CI/CD"
+  default_prompt: "Use $buildkite-pipeline-setup to create a high-quality Buildkite CI/CD pipeline for this repository."

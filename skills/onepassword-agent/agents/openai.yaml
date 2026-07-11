@@ -1,0 +1,4 @@
+interface:
+  display_name: "1Password Agent"
+  short_description: "Use 1Password SDK secrets safely."
+  default_prompt: "Use $onepassword-agent to load the service account token, inject 1Password secrets into commands, and manage agent-scoped credentials without exposing secret values."
