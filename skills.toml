@@ -1,6 +1,7 @@
 [defaults]
 install_root = "~/.agents/skills"
-system_installer = "~/.agents/skills/.system/skill-installer/scripts/install-skill-from-github.py"
+npx_package = "skills@1.5.16"
+catalog = "inventory.toml"
 
 [profiles]
 core = ["convert-prompt", "gemini-large-context", "maestro"]
@@ -12,49 +13,77 @@ apple = [
   "xcode-build-optimization",
 ]
 agent-dev = ["convert-prompt", "gemini-large-context", "maestro"]
+current-known = [
+  "brandalf",
+  "check-impl-against-spec",
+  "council",
+  "create-pr",
+  "diagnose-ci-failures",
+  "fix-errors",
+  "implement-specs",
+  "pr-walkthrough",
+  "reproduce-bug-report",
+  "resolve-merge-conflicts",
+  "respond-to-pr-comments-in-blocklist",
+  "review-pr",
+  "spec-driven-implementation",
+  "update-skill",
+  "validate-changes-match-specs",
+  "write-product-spec",
+  "write-tech-spec",
+  "text-to-lottie",
+]
 
 [skills.convert-prompt]
 source = "local"
 path = "convert-prompt"
+expected_sha256 = "df84e970635e646e4459794d25ab385325b66e277a79434adc470e994cffc0a7"
 description = "Rewrite prompts for agent-friendly execution."
 
 [skills.gemini-large-context]
 source = "local"
 path = "gemini-large-context"
+expected_sha256 = "c7b03f5942c9b5aa45c0d6c699b11a64a2c9e7c2239c83e8f6158867d8772fb3"
 description = "Large-context repo analysis through Gemini CLI wrappers."
 
 [skills.maestro]
 source = "local"
 path = "maestro"
+expected_sha256 = "05c9a7ab011b63efe00d0d860d98438808ca546602b4971cdc9fe9c36e6c51e5"
 description = "Maestro mobile UI flow authoring and validation."
 
 [skills.swift-concurrency-pro]
 source = "github"
 repo = "twostraws/Swift-Concurrency-Agent-Skill"
+ref = "bee3f69ba17142da148d3c5406f148ed62592b69"
 paths = ["swift-concurrency-pro"]
 description = "Swift async/await, actors, Sendable, and Swift 6 migration guidance."
 
 [skills.swift-testing-pro]
 source = "github"
 repo = "twostraws/Swift-Testing-Agent-Skill"
+ref = "2d6bba14a3c8bf3694f218b92fffe617c41ae43e"
 paths = ["swift-testing-pro"]
 description = "Swift Testing macros, parameterized tests, and XCTest migration guidance."
 
 [skills.swiftdata-pro]
 source = "github"
 repo = "twostraws/SwiftData-Agent-Skill"
+ref = "922d989473a9914210b41529a1ac5636aff4b8c1"
 paths = ["swiftdata-pro"]
 description = "SwiftData models, queries, migrations, and CloudKit sync guidance."
 
 [skills.core-data-expert]
 source = "github"
 repo = "AvdLee/Core-Data-Agent-Skill"
+ref = "855ca7d0df50e82b00c12881dd9cd23c19ef5f49"
 paths = ["core-data-expert"]
 description = "Core Data stack setup, fetches, background contexts, and migrations."
 
 [skills.xcode-build-optimization]
 source = "github"
 repo = "AvdLee/Xcode-Build-Optimization-Agent-Skill"
+ref = "6bd7b596cd688b1127ded00e812b1b6937ec35d6"
 paths = [
   "skills/xcode-build-benchmark",
   "skills/xcode-compilation-analyzer",
@@ -65,3 +94,126 @@ paths = [
 ]
 description = "Swift/Xcode build benchmarking, analysis, orchestration, and repair skills."
 
+[skills.brandalf]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/brandalf"]
+expected_sha256 = "8543b91fdaf6ef0f6683411ee50b3090e55a7509903673da6229dddb902b5116"
+
+[skills.check-impl-against-spec]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/check-impl-against-spec"]
+expected_sha256 = "4e10d64edc1eddf59915115cf736103345f1655216fada823af21cdfe03b3275"
+
+[skills.council]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/council"]
+expected_sha256 = "4f70ebcf27a97e7d114122aeb134afad1f74c9d7defc5e15f66dc27b608c82ea"
+
+[skills.create-pr]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/create-pr"]
+expected_sha256 = "78b080cde15d11daabd236457051786bbc427958d853c56d6fa479be30f084ba"
+
+[skills.diagnose-ci-failures]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/diagnose-ci-failures"]
+expected_sha256 = "8cab6706ff409044665349253a609c6e27595f6bef278b220a0a82c91347ea73"
+
+[skills.fix-errors]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/fix-errors"]
+expected_sha256 = "36b1d82a106e7b9d73d875ccb1451c71ab233f3ecb8eac1c35d37ef185514a41"
+
+[skills.implement-specs]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/implement-specs"]
+expected_sha256 = "c0501dcc21d9d4e8d3e24c24f9957974ba7b835a634b1c7e1c26a36071c62080"
+
+[skills.pr-walkthrough]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/pr-walkthrough"]
+expected_sha256 = "42346a52abacfe3d351608e22c737fcfc1ebcd825b825334747835d1d73c28e8"
+
+[skills.reproduce-bug-report]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/reproduce-bug-report"]
+expected_sha256 = "02b892b3607d4a01384eac44797b9196d017ba4de722dc21ad3431eb12537772"
+
+[skills.resolve-merge-conflicts]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/resolve-merge-conflicts"]
+expected_sha256 = "7d9cbdc8814dcfb69b5731f428137b8854f8f9cf8ab646831fd1fa6052a5ddfd"
+
+[skills.respond-to-pr-comments-in-blocklist]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/respond-to-pr-comments-in-blocklist"]
+expected_sha256 = "a26e86621872cb12a4d8d95e59e815f59870cd8cbd5c5dd08a963329de67f924"
+
+[skills.review-pr]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/review-pr"]
+expected_sha256 = "70b9971e44d352c977df3e45ed0010fda322b25e2d826e810107e031255348e5"
+
+[skills.spec-driven-implementation]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/spec-driven-implementation"]
+expected_sha256 = "c92159b9b658d9621ad49d690895ee1931629e730fc7023919e27093f0fe7e4a"
+
+[skills.update-skill]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/update-skill"]
+expected_sha256 = "ea91d20e59d4be2d2903a7954714d53a438ff53cc7b17692e94738d3198ae622"
+
+[skills.validate-changes-match-specs]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/validate-changes-match-specs"]
+expected_sha256 = "4de7e58c98ca4d76e5c6b2b4408182acf3397b795108815a5e58878f61252fc4"
+
+[skills.write-product-spec]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/write-product-spec"]
+expected_sha256 = "ad1d7ba4a9ee324d1adc442b004923af96e58a06df068105af43dc53af16602f"
+
+[skills.write-tech-spec]
+source = "github"
+repo = "warpdotdev/common-skills"
+ref = "f2882b9458370cbc23d1b8cb0e458d23b1591205"
+paths = [".agents/skills/write-tech-spec"]
+expected_sha256 = "b20caf90cf7eaf4250edbc1bcf456d0cf0eb0878d5409c621db88f53adbb45bd"
+
+[skills.text-to-lottie]
+source = "local"
+path = "text-to-lottie"
+expected_sha256 = "94740e7a6be6ba6a93ca58aab42e9e3467eb214085c8c58efecb5ca66d6c3093"

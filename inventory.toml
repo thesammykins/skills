@@ -1,0 +1,626 @@
+# Attested inventory from 2026-07-11. Unknown third-party bytes remain only in the local recovery archive.
+
+[[skill]]
+directory = "agent-browser"
+install_name = "agent-browser"
+status = "unresolved"
+sha256 = "21d9f7a5dcfa392c6af0bcbbc4e7b0af10fc682e486d591fdf7f3997ecb36bd4"
+
+[[skill]]
+directory = "anti-slop"
+install_name = "anti-ai-slop"
+status = "unresolved"
+sha256 = "dce943b78f29723d87397763a3eb5530192c779016a81afd01a476eafa64f662"
+
+[[skill]]
+directory = "api-design-architect"
+install_name = "api-design-architect"
+status = "unresolved"
+sha256 = "0850e61cd6534b95b4f0580f2ca4d769cc20a5316b16254507402dae5612cd3a"
+
+[[skill]]
+directory = "appkit-interop"
+install_name = "appkit-interop"
+status = "unresolved"
+sha256 = "30209d36968b3dc3df6f7bba059932df667fe37d6b82d45b2c18ea918833020a"
+
+[[skill]]
+directory = "apple-foundation-models"
+install_name = "apple-foundation-models"
+status = "unresolved"
+sha256 = "af3b09afb8df0c38dbc81a4ed86356fe99f005fadf5baf4f69003371bb2483a9"
+
+[[skill]]
+directory = "asc-app-create-ui"
+install_name = "asc-app-create-ui"
+status = "unresolved"
+sha256 = "e36ab8044f25eaca657734731cd25a0bff7362a0cb9953d154b1e1a62719e62d"
+
+[[skill]]
+directory = "asc-aso-audit"
+install_name = "asc-aso-audit"
+status = "unresolved"
+sha256 = "ccca0fd6c8f8b7d493285049903889518548860762ee95af396aa445f562dcb7"
+
+[[skill]]
+directory = "asc-build-lifecycle"
+install_name = "asc-build-lifecycle"
+status = "unresolved"
+sha256 = "4f78ba0e4dd568eace09c28040ed8fbaf8927f237f6dd928044bed0a016840a9"
+
+[[skill]]
+directory = "asc-cli-usage"
+install_name = "asc-cli-usage"
+status = "unresolved"
+sha256 = "7ef85d23a2aab8b572067046d4645b9c194fa4a5ebdaa9147ebc0dffefe78609"
+
+[[skill]]
+directory = "asc-crash-triage"
+install_name = "asc-crash-triage"
+status = "unresolved"
+sha256 = "df0beab02e627de150bfd85b8b812a593fc9266bea3eaeaff8d23fb7b86d76af"
+
+[[skill]]
+directory = "asc-id-resolver"
+install_name = "asc-id-resolver"
+status = "unresolved"
+sha256 = "0cc93bf232c6b2ee24ce9b009961e4aac0e67dda03cd2adf656fdfcffa6e69e9"
+
+[[skill]]
+directory = "asc-localize-metadata"
+install_name = "asc-localize-metadata"
+status = "unresolved"
+sha256 = "f18950bedb7a003bd64a2612461068209a86998ee218f8aa5841423756f97ac5"
+
+[[skill]]
+directory = "asc-metadata-sync"
+install_name = "asc-metadata-sync"
+status = "unresolved"
+sha256 = "e0da7bc88f968827c0b602ace93565e3ff92cef4d8afd3b6e5a009133a8d2a5c"
+
+[[skill]]
+directory = "asc-notarization"
+install_name = "asc-notarization"
+status = "unresolved"
+sha256 = "fbce59f52540040793cc645fdc7e83030392d533062728243826ca0a1a3c01e7"
+
+[[skill]]
+directory = "asc-ppp-pricing"
+install_name = "asc-ppp-pricing"
+status = "unresolved"
+sha256 = "c4ad50af512786031c6f5b64c24712b037cfe5ed1647120b235e053c69f56942"
+
+[[skill]]
+directory = "asc-release-flow"
+install_name = "asc-release-flow"
+status = "unresolved"
+sha256 = "42bd1ed2c374a710a1905b4497be4eed4b0b508b1b1ab692031c5a27f1fee092"
+
+[[skill]]
+directory = "asc-revenuecat-catalog-sync"
+install_name = "asc-revenuecat-catalog-sync"
+status = "unresolved"
+sha256 = "295713280f6c85a75962dc076189a9a0c700b3d0d673ad5babd393dfd24fb944"
+
+[[skill]]
+directory = "asc-screenshot-resize"
+install_name = "asc-screenshot-resize"
+status = "unresolved"
+sha256 = "f55473ed551433bbf72c296846dd862f6672922e25563938fda240d71aa3d757"
+
+[[skill]]
+directory = "asc-shots-pipeline"
+install_name = "asc-shots-pipeline"
+status = "unresolved"
+sha256 = "f6dcdff9d1e54168d3bee939d95ed96c29f66754672753f06b1d88ad5fe2d2e2"
+
+[[skill]]
+directory = "asc-signing-setup"
+install_name = "asc-signing-setup"
+status = "unresolved"
+sha256 = "eeedde960905fbfc6e21e89a21734a258fdbacb43155d69285da1973130f8713"
+
+[[skill]]
+directory = "asc-submission-health"
+install_name = "asc-submission-health"
+status = "unresolved"
+sha256 = "7bc2aadab30058fc832da3ed71531888b618c86b0ba85470e19d8184d965e15f"
+
+[[skill]]
+directory = "asc-subscription-localization"
+install_name = "asc-subscription-localization"
+status = "unresolved"
+sha256 = "2871986ffe7bc3621a92feee0e9f2cfba440d65465eac37d2d6ad9bfd4f8c031"
+
+[[skill]]
+directory = "asc-testflight-orchestration"
+install_name = "asc-testflight-orchestration"
+status = "unresolved"
+sha256 = "233a86190d2239ab1c863c2247cb84d65081be3842dfd35f81f4c833432125ab"
+
+[[skill]]
+directory = "asc-wall-submit"
+install_name = "asc-wall-submit"
+status = "unresolved"
+sha256 = "38d1d5417166c756faab3cd2389cf4a62bf99839c9cb1a160a2bc7a9f24b41c2"
+
+[[skill]]
+directory = "asc-whats-new-writer"
+install_name = "asc-whats-new-writer"
+status = "unresolved"
+sha256 = "3cb95a86be9cb82c61d73785c1e0655fcea25a2eb2c289c1a041f1834ff7b74c"
+
+[[skill]]
+directory = "asc-workflow"
+install_name = "asc-workflow"
+status = "unresolved"
+sha256 = "0a48b078e90b32a289726a16f637547a0ec861e27ede1be4f36bc5ed9a9b318d"
+
+[[skill]]
+directory = "asc-xcode-build"
+install_name = "asc-xcode-build"
+status = "unresolved"
+sha256 = "d62250c92614560c850e9c00ce554f46113814aa98389bd112eb46071c20c6d0"
+
+[[skill]]
+directory = "brandalf"
+install_name = "brandalf"
+status = "github"
+sha256 = "8543b91fdaf6ef0f6683411ee50b3090e55a7509903673da6229dddb902b5116"
+
+[[skill]]
+directory = "build-run-debug"
+install_name = "build-run-debug"
+status = "unresolved"
+sha256 = "ee373f92e8c29d1d4311af24e7287469981b66af0ab774db67291cf84b81fb0f"
+
+[[skill]]
+directory = "buildkite-agent-runtime"
+install_name = "buildkite-agent-runtime"
+status = "unresolved"
+sha256 = "46c1a2bc93a9fe3dc62396ec7e0972fa0c51f6214b8ed6062e494eef25ecad8e"
+
+[[skill]]
+directory = "buildkite-api"
+install_name = "buildkite-api"
+status = "unresolved"
+sha256 = "0542be9a646ae637a58a8cf3dcdc7ee76f8fec5690d8e84671d672464e1c9204"
+
+[[skill]]
+directory = "buildkite-cli"
+install_name = "buildkite-cli"
+status = "unresolved"
+sha256 = "7bfef1ee951bcbee003a28d08366cc511270a7a85e322af7e8216ff576d3de90"
+
+[[skill]]
+directory = "buildkite-migration"
+install_name = "buildkite-migration"
+status = "unresolved"
+sha256 = "fb0e4c805e7f56264624b6ac5465d7610ae96b0287e3ebf0da0c38a5e42cdc05"
+
+[[skill]]
+directory = "buildkite-pipeline-setup"
+install_name = "buildkite-pipeline-setup"
+status = "unresolved"
+sha256 = "79f3c6817a9a39f90a1828a773b34314f6162402933f367dbd72930c4bb3677c"
+
+[[skill]]
+directory = "buildkite-pipelines"
+install_name = "buildkite-pipelines"
+status = "unresolved"
+sha256 = "2afb636d6b674f01549f1b7e270bb13b42e6aab74e42da265e5b98007d992b32"
+
+[[skill]]
+directory = "buildkite-preflight"
+install_name = "buildkite-preflight"
+status = "unresolved"
+sha256 = "1007aae0f693527bd9f20f7d3c30143b69648c070e3a04b23be11535d027d911"
+
+[[skill]]
+directory = "check-impl-against-spec"
+install_name = "check-impl-against-spec"
+status = "github"
+sha256 = "4e10d64edc1eddf59915115cf736103345f1655216fada823af21cdfe03b3275"
+
+[[skill]]
+directory = "cicd-security"
+install_name = "cicd-security"
+status = "unresolved"
+sha256 = "3a3362f69aeb419566af0baedd17cd2f6275edc1506f5ff6f191d9699c51fa23"
+
+[[skill]]
+directory = "code-quality-gates"
+install_name = "code-quality-gates"
+status = "unresolved"
+sha256 = "9ac131f7c466bfcca500871bedc632d7c1f1cce6846a58d5af4b68b934b62f58"
+
+[[skill]]
+directory = "codebase-inspection"
+install_name = "codebase-inspection"
+status = "unresolved"
+sha256 = "8287e796ba578d7419eaf4421e03a61bda5fbe73f8ac95e60a364ce7e83e57fc"
+
+[[skill]]
+directory = "convert-prompt"
+install_name = "convert-prompt"
+status = "local"
+sha256 = "df84e970635e646e4459794d25ab385325b66e277a79434adc470e994cffc0a7"
+
+[[skill]]
+directory = "council"
+install_name = "council"
+status = "github"
+sha256 = "4f70ebcf27a97e7d114122aeb134afad1f74c9d7defc5e15f66dc27b608c82ea"
+
+[[skill]]
+directory = "create-pr"
+install_name = "create-pr"
+status = "github"
+sha256 = "78b080cde15d11daabd236457051786bbc427958d853c56d6fa479be30f084ba"
+
+[[skill]]
+directory = "cua-driver"
+install_name = "cua-driver"
+status = "unresolved"
+sha256 = "49e0221be936f9cef2d8c5f6f7f623d511be1e2bd75acc0b16075577eff74228"
+
+[[skill]]
+directory = "deliver-baseline"
+install_name = "deliver-baseline"
+status = "unresolved"
+sha256 = "801fbf97541ae4b5640785eab9966ca462f073afe9f29319f3210df751a9c0fe"
+
+[[skill]]
+directory = "diagnose-ci-failures"
+install_name = "diagnose-ci-failures"
+status = "github"
+sha256 = "8cab6706ff409044665349253a609c6e27595f6bef278b220a0a82c91347ea73"
+
+[[skill]]
+directory = "docker-container-pro"
+install_name = "docker-container-pro"
+status = "unresolved"
+sha256 = "3311bd95b6e72248eadaa183959479d77d6b8d669d5bce19954ad47747dbf3d9"
+
+[[skill]]
+directory = "figma"
+install_name = "figma"
+status = "unresolved"
+sha256 = "f7b2592cd9f473f18c2f0b204c038f08cbfd91f6bf7c36c309ac2f1011b25faa"
+
+[[skill]]
+directory = "fix-errors"
+install_name = "fix-errors"
+status = "github"
+sha256 = "36b1d82a106e7b9d73d875ccb1451c71ab233f3ecb8eac1c35d37ef185514a41"
+
+[[skill]]
+directory = "frontend-ui-ux"
+install_name = "frontend-ui-ux"
+status = "unresolved"
+sha256 = "08e2e0c7a0b0d08c81bb45f6f8a9b95fe31f669c956ee67dead44999f6e1d347"
+
+[[skill]]
+directory = "full-output-enforcement"
+install_name = "full-output-enforcement"
+status = "unresolved"
+sha256 = "e12895931d4c52f3489d6a66c292370245ef18ff1b1410a1dae135f3df164183"
+
+[[skill]]
+directory = "gemini-large-context"
+install_name = "gemini-large-context"
+status = "local"
+sha256 = "c7b03f5942c9b5aa45c0d6c699b11a64a2c9e7c2239c83e8f6158867d8772fb3"
+
+[[skill]]
+directory = "gh-cli"
+install_name = "gh-cli"
+status = "unresolved"
+sha256 = "5d1a4f021e82b1d30617248570eb06d70ffd83604520ea4adcea2d6f892de7b8"
+
+[[skill]]
+directory = "git-master"
+install_name = "git-master"
+status = "unresolved"
+sha256 = "441158e08d986120de303987431d17d3752112607e19e58288f342cbbc65af7b"
+
+[[skill]]
+directory = "high-end-visual-design"
+install_name = "high-end-visual-design"
+status = "unresolved"
+sha256 = "aa39d8bcd046c73a626302d3c3ac2a7a03c4d5a5d271e6b4b31a9da5d392a798"
+
+[[skill]]
+directory = "implement-specs"
+install_name = "implement-specs"
+status = "github"
+sha256 = "c0501dcc21d9d4e8d3e24c24f9957974ba7b835a634b1c7e1c26a36071c62080"
+
+[[skill]]
+directory = "ios-app-intents"
+install_name = "ios-app-intents"
+status = "unresolved"
+sha256 = "6542b5e7ee9f836639fdb01c517e2b9a99148a68e7484d73cf89cc42db977c5f"
+
+[[skill]]
+directory = "ios-debugger-agent"
+install_name = "ios-debugger-agent"
+status = "unresolved"
+sha256 = "39189b3af37d02740f5ed686a0a1cae587e34f5e038a5c1f36af7a80e379a7e5"
+
+[[skill]]
+directory = "jenkins-workflows"
+install_name = "jenkins-workflows"
+status = "unresolved"
+sha256 = "1e7331f02e5c926f21805296005c318a30a34043a7288e6d1c67aeddcac84b4f"
+
+[[skill]]
+directory = "jenkins-workflows 2"
+install_name = "jenkins-workflows 2"
+status = "duplicate"
+sha256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+duplicate_of = "jenkins-workflows"
+
+[[skill]]
+directory = "linear"
+install_name = "linear"
+status = "unresolved"
+sha256 = "1748a6f67391b1abf15c759cae812cc19e8f18d260fb48805749c7d39055db43"
+
+[[skill]]
+directory = "liquid-glass"
+install_name = "liquid-glass"
+status = "unresolved"
+sha256 = "1b6aee1dca6d8591115a3711f828adc72ae4c9657ac50badfb20174947e2e3ab"
+
+[[skill]]
+directory = "macos-hardening"
+install_name = "macos-hardening"
+status = "unresolved"
+sha256 = "bcf5aa8f7710f1cfde31173c5650d636dcc1855a6c416dfdb61c9fbca4e59244"
+
+[[skill]]
+directory = "maestro"
+install_name = "maestro"
+status = "local"
+sha256 = "05c9a7ab011b63efe00d0d860d98438808ca546602b4971cdc9fe9c36e6c51e5"
+
+[[skill]]
+directory = "node-inspect-debugger"
+install_name = "node-inspect-debugger"
+status = "unresolved"
+sha256 = "28e7cb1d78e456ced78794fa8c9242f8e66499c1e6acdb40abf4da69819139c7"
+
+[[skill]]
+directory = "onepassword-agent"
+install_name = "onepassword-agent"
+status = "unresolved"
+sha256 = "ecf465ba00e0fca8f7cd0208848cd120ef1a1beb60d38f606ab627a5b94cddf3"
+
+[[skill]]
+directory = "opencode-plugin-author"
+install_name = "opencode-plugin-author"
+status = "unresolved"
+sha256 = "4b334a930d52daba04ab281814d982c1d7994c90144134ab80093675654ae020"
+
+[[skill]]
+directory = "opencode-sdk-builder"
+install_name = "opencode-sdk-builder"
+status = "unresolved"
+sha256 = "2321a4fa04c0558ac5bf1e56ba4ec1e8723a3a69b8987a0d0f0f939207989d42"
+
+[[skill]]
+directory = "opencode-server-integrations"
+install_name = "opencode-server-integrations"
+status = "unresolved"
+sha256 = "d49b97d24a764e42b569985b5bfef20c4ebe7610450b5861461b372f17edc0b3"
+
+[[skill]]
+directory = "packaging-notarization"
+install_name = "packaging-notarization"
+status = "unresolved"
+sha256 = "1852ebcf95493fcbcbaa1cf7d1b6951b74cf79c3953dcefd05d9b1deaccd9210"
+
+[[skill]]
+directory = "pr-walkthrough"
+install_name = "pr-walkthrough"
+status = "github"
+sha256 = "42346a52abacfe3d351608e22c737fcfc1ebcd825b825334747835d1d73c28e8"
+
+[[skill]]
+directory = "python-debugpy"
+install_name = "python-debugpy"
+status = "unresolved"
+sha256 = "ab2b28ee37d5452d1ae0a40e32e1327cbda5cd27b99bb58193d05a6a8fc7afc7"
+
+[[skill]]
+directory = "python-modern-standards"
+install_name = "python-modern-standards"
+status = "unresolved"
+sha256 = "f93ec79e369b80ff70fe7cec5766354df3450eb2ec81a9fe77fe2a6f1c88caf2"
+
+[[skill]]
+directory = "redesign-existing-projects"
+install_name = "redesign-existing-projects"
+status = "unresolved"
+sha256 = "9dc6ffec96d450dffa4cbf16648ebe455ecd84eea7a5605d1a2b4166a6c47f1a"
+
+[[skill]]
+directory = "release-management"
+install_name = "release-management"
+status = "unresolved"
+sha256 = "cd7107ffe736ca04b7fd868277eccceb703fa957e10a4510ec63cf67b3ac8bf2"
+
+[[skill]]
+directory = "reproduce-bug-report"
+install_name = "reproduce-bug-report"
+status = "github"
+sha256 = "02b892b3607d4a01384eac44797b9196d017ba4de722dc21ad3431eb12537772"
+
+[[skill]]
+directory = "resolve-merge-conflicts"
+install_name = "resolve-merge-conflicts"
+status = "github"
+sha256 = "7d9cbdc8814dcfb69b5731f428137b8854f8f9cf8ab646831fd1fa6052a5ddfd"
+
+[[skill]]
+directory = "respond-to-pr-comments-in-blocklist"
+install_name = "respond-to-pr-comments-in-blocklist"
+status = "github"
+sha256 = "a26e86621872cb12a4d8d95e59e815f59870cd8cbd5c5dd08a963329de67f924"
+
+[[skill]]
+directory = "review-pr"
+install_name = "review-pr"
+status = "github"
+sha256 = "70b9971e44d352c977df3e45ed0010fda322b25e2d826e810107e031255348e5"
+
+[[skill]]
+directory = "security-best-practices"
+install_name = "security-best-practices"
+status = "unresolved"
+sha256 = "2fe254c0d1077c833ddc4e01345ca748290b073eed390ffcea88a4f1cfd9a42c"
+
+[[skill]]
+directory = "security-threat-model"
+install_name = "security-threat-model"
+status = "unresolved"
+sha256 = "d95a00b78e4aa4d174596ec3a73efb19ed686de8a65120d78f29da5ce84fd646"
+
+[[skill]]
+directory = "signing-entitlements"
+install_name = "signing-entitlements"
+status = "unresolved"
+sha256 = "631ea08b2976872e9e60725e3415334bc37bfbc5f451b48c56c430fc8f658380"
+
+[[skill]]
+directory = "spec-driven-implementation"
+install_name = "spec-driven-implementation"
+status = "github"
+sha256 = "c92159b9b658d9621ad49d690895ee1931629e730fc7023919e27093f0fe7e4a"
+
+[[skill]]
+directory = "spike"
+install_name = "spike"
+status = "unresolved"
+sha256 = "b71dfb5957118d6335db8ea88c6c39c94509de6712a7b587e0e5d0a434b32ff3"
+
+[[skill]]
+directory = "swiftpm-macos"
+install_name = "swiftpm-macos"
+status = "unresolved"
+sha256 = "2a1346f321a089b6cb38bfa2d106e9dc6e24587d7978d26ef5071f96c4299c06"
+
+[[skill]]
+directory = "swiftui-liquid-glass"
+install_name = "swiftui-liquid-glass"
+status = "unresolved"
+sha256 = "faaa6f2c38329346f88b786d3746df98f9b0e7d0b0a6c5c42c0d0b7a157aa5d2"
+
+[[skill]]
+directory = "swiftui-patterns"
+install_name = "swiftui-patterns"
+status = "unresolved"
+sha256 = "71d2b7ef27f1afc469edc7c827b674cc2c7885c14c53abb0ab5c03cb522e81a7"
+
+[[skill]]
+directory = "swiftui-performance-audit"
+install_name = "swiftui-performance-audit"
+status = "unresolved"
+sha256 = "06e163dd1fef6f17d669f83a9f5b43cf37abca2b7f836515fbab86e37a8de408"
+
+[[skill]]
+directory = "swiftui-ui-patterns"
+install_name = "swiftui-ui-patterns"
+status = "unresolved"
+sha256 = "fce96f1cd13fe7416327ac628c3c18e303fccef04c16c46dbd6af24bd1dedde1"
+
+[[skill]]
+directory = "swiftui-view-refactor"
+install_name = "swiftui-view-refactor"
+status = "unresolved"
+sha256 = "8b46a03be4811b27aafff073563269e54ed6c77212cf7223b5d0334b93f996dc"
+
+[[skill]]
+directory = "systematic-debugging"
+install_name = "systematic-debugging"
+status = "unresolved"
+sha256 = "e880973764424bbe5e52ddf686d88396354cda3cce4e64ae207d67e1dfcf53c0"
+
+[[skill]]
+directory = "telemetry"
+install_name = "telemetry"
+status = "unresolved"
+sha256 = "265d9e28738f542c081558c8c9e8eaab2db3d7da50ee79759c027afa6751a955"
+
+[[skill]]
+directory = "test-driven-development"
+install_name = "test-driven-development"
+status = "unresolved"
+sha256 = "410e720af747d21cf4116b866234777c4c2701556fe5e4d0027c1c0caf8af0de"
+
+[[skill]]
+directory = "test-triage"
+install_name = "test-triage"
+status = "unresolved"
+sha256 = "2881efaa01d43cf278b7f573a2eeb69f3ec6a73540f635f77b5a82a89bec8d2b"
+
+[[skill]]
+directory = "testing-strategist"
+install_name = "testing-strategist"
+status = "unresolved"
+sha256 = "d1ad84e47065fe21b224e02f255040455cfece63057b1736956b4c81c5b26524"
+
+[[skill]]
+directory = "text-to-lottie"
+install_name = "text-to-lottie"
+status = "local"
+sha256 = "94740e7a6be6ba6a93ca58aab42e9e3467eb214085c8c58efecb5ca66d6c3093"
+
+[[skill]]
+directory = "typescript-pro"
+install_name = "typescript-pro"
+status = "unresolved"
+sha256 = "5c57f2e51fd3b733d584e6808396265c3f5c696d18fc6905b3260138b4970470"
+
+[[skill]]
+directory = "update-skill"
+install_name = "update-skill"
+status = "github"
+sha256 = "ea91d20e59d4be2d2903a7954714d53a438ff53cc7b17692e94738d3198ae622"
+
+[[skill]]
+directory = "validate-changes-match-specs"
+install_name = "validate-changes-match-specs"
+status = "github"
+sha256 = "4de7e58c98ca4d76e5c6b2b4408182acf3397b795108815a5e58878f61252fc4"
+
+[[skill]]
+directory = "view-refactor"
+install_name = "view-refactor"
+status = "unresolved"
+sha256 = "6928823c809c454160a8f5a7f150db7e4cba3e0dc1b16b4903ae703785442e3d"
+
+[[skill]]
+directory = "window-management"
+install_name = "window-management"
+status = "unresolved"
+sha256 = "c40072fb3a92948a7b954173a637ed7fbe5c58480c9bb1e33dfbeeca167c5937"
+
+[[skill]]
+directory = "write-product-spec"
+install_name = "write-product-spec"
+status = "github"
+sha256 = "ad1d7ba4a9ee324d1adc442b004923af96e58a06df068105af43dc53af16602f"
+
+[[skill]]
+directory = "write-tech-spec"
+install_name = "write-tech-spec"
+status = "github"
+sha256 = "b20caf90cf7eaf4250edbc1bcf456d0cf0eb0878d5409c621db88f53adbb45bd"
+
+[[skill]]
+directory = "writing-plans"
+install_name = "writing-plans"
+status = "unresolved"
+sha256 = "7f659b5c28dec3c0b9b08cf6563c1822895d8006b48d6e9f262bf1efb84e3cd4"
