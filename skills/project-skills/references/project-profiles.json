@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "profiles": [
+    {
+      "id": "go",
+      "activation": "automatic",
+      "evidenceAny": [
+        "go.mod",
+        "go.work"
+      ],
+      "pluginCandidate": "go-development",
+      "sources": [
+        {
+          "root": "https://github.com/samber/cc-skills-golang",
+          "skill": "golang-how-to"
+        }
+      ]
+    },
+    {
+      "id": "rust",
+      "activation": "automatic",
+      "evidenceAny": [
+        "Cargo.toml"
+      ],
+      "pluginCandidate": "rust-development",
+      "sources": [
+        {
+          "root": "https://github.com/leonardomso/rust-skills",
+          "skill": "rust-skills"
+        }
+      ]
+    },
+    {
+      "id": "swift",
+      "activation": "automatic",
+      "evidenceAny": [
+        "Package.swift",
+        "*.xcodeproj",
+        "*.xcworkspace"
+      ],
+      "pluginCandidate": "swift-development",
+      "sources": [
+        {
+          "root": "https://github.com/twostraws/Swift-Concurrency-Agent-Skill",
+          "skill": "swift-concurrency-pro"
+        },
+        {
+          "root": "https://github.com/twostraws/Swift-Testing-Agent-Skill",
+          "skill": "swift-testing-pro"
+        },
+        {
+          "root": "https://github.com/twostraws/SwiftData-Agent-Skill",
+          "skill": "swiftdata-pro",
+          "optionalWhen": "The project imports or adopts SwiftData."
+        },
+        {
+          "root": "https://github.com/AvdLee/Core-Data-Agent-Skill",
+          "skill": "core-data-expert",
+          "optionalWhen": "The project imports Core Data."
+        }
+      ]
+    },
+    {
+      "id": "apple-platform-runtime",
+      "activation": "automatic",
+      "evidenceAny": [
+        "*.xcodeproj",
+        "*.xcworkspace"
+      ],
+      "pluginCandidate": "xcode-tooling",
+      "sources": [
+        {
+          "root": "https://github.com/getsentry/XcodeBuildMCP",
+          "skill": "xcodebuildmcp"
+        }
+      ],
+      "notes": "The eventual plugin may also carry the XcodeBuildMCP server configuration; do not enable unrelated upstream repository-review skills."
+    },
+    {
+      "id": "xcode-build-performance",
+      "activation": "intent",
+      "evidenceAny": [
+        "*.xcodeproj",
+        "*.xcworkspace",
+        "Package.swift"
+      ],
+      "intentAny": [
+        "benchmark build time",
+        "diagnose slow builds",
+        "optimize Xcode builds"
+      ],
+      "pluginCandidate": "xcode-build-performance",
+      "sources": [
+        {
+          "root": "https://github.com/AvdLee/Xcode-Build-Optimization-Agent-Skill",
+          "skill": "xcode-build-orchestrator"
+        }
+      ]
+    },
+    {
+      "id": "app-store-connect",
+      "activation": "intent",
+      "evidenceAny": [
+        ".asc/workflow.json",
+        "metadata/**",
+        "fastlane/metadata/**"
+      ],
+      "intentAny": [
+        "App Store Connect",
+        "TestFlight",
+        "App Store submission",
+        "Apple notarization"
+      ],
+      "pluginCandidate": "app-store-delivery",
+      "sources": [
+        {
+          "root": "https://github.com/rudrankriyam/app-store-connect-cli-skills",
+          "skill": "asc-cli-usage"
+        }
+      ],
+      "notes": "Discover the current ASC skills and install only those needed by the project's release workflow."
+    },
+    {
+      "id": "android",
+      "activation": "automatic",
+      "evidenceAny": [
+        "settings.gradle",
+        "settings.gradle.kts",
+        "**/AndroidManifest.xml"
+      ],
+      "pluginCandidate": "android-development",
+      "sources": [
+        {
+          "root": "android skills add --all",
+          "type": "official-installer",
+          "skill": "android-cli"
+        }
+      ],
+      "notes": "The Android CLI is the recorded authoritative installer; select feature skills from project evidence instead of activating all of them."
+    },
+    {
+      "id": "cloudflare",
+      "activation": "automatic",
+      "evidenceAny": [
+        "wrangler.toml",
+        "wrangler.json",
+        "wrangler.jsonc"
+      ],
+      "pluginCandidate": "cloudflare-development",
+      "sources": [
+        {
+          "root": "https://github.com/cloudflare/skills",
+          "skill": "cloudflare"
+        }
+      ]
+    },
+    {
+      "id": "buildkite",
+      "activation": "automatic",
+      "evidenceAny": [
+        ".buildkite/pipeline.yml",
+        ".buildkite/pipeline.yaml"
+      ],
+      "pluginCandidate": "buildkite-development",
+      "sources": [
+        {
+          "root": "https://github.com/buildkite/skills",
+          "skill": "buildkite-pipelines"
+        }
+      ]
+    },
+    {
+      "id": "meta-portal",
+      "activation": "intent",
+      "evidenceAny": [
+        "**/AndroidManifest.xml"
+      ],
+      "intentAny": [
+        "Meta Portal",
+        "Facebook Portal"
+      ],
+      "pluginCandidate": "meta-portal-development",
+      "sources": [
+        {
+          "root": "https://github.com/meta-quest/agentic-tools",
+          "skill": "portal"
+        }
+      ]
+    }
+  ]
+}
