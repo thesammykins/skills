@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "task_id": "<task-id>",
+  "status": "active",
+  "objective": "<top-level requested outcome>",
+  "current_checkpoint": "<immediate connected outcome>",
+  "repository": {
+    "root": "<repository path>",
+    "worktree": "<worktree path>",
+    "branch": "<branch>",
+    "base": "<base commit or branch>",
+    "head_observed": "<full SHA>"
+  },
+  "scope": {
+    "write_paths": [
+      "<path or glob>"
+    ],
+    "non_goals": [
+      "<real exclusion>"
+    ],
+    "notes": "<why a durable state file is needed>"
+  },
+  "progress": {
+    "completed": [
+      "<verified outcome>"
+    ],
+    "next_action": "<one exact next action>",
+    "blocker": null
+  },
+  "evidence": [
+    {
+      "command_or_procedure": "<exact command or procedure>",
+      "result": "<observed result>",
+      "head_or_state": "<commit or state identifier>",
+      "relevant_inputs": [
+        "<source, tests, configuration, environment>"
+      ],
+      "recorded_at": "<ISO-8601 timestamp>"
+    }
+  ],
+  "boundary": {
+    "new_session_required": false,
+    "reason": null
+  },
+  "handoff_path": null
+}

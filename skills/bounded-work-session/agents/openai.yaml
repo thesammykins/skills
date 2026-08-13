@@ -1,0 +1,4 @@
+interface:
+  display_name: "Focused Work Continuity"
+  short_description: "Keep long work productive without artificial handoff loops"
+  default_prompt: "Use $bounded-work-session only where cross-session recovery or meaningful state risk is needed. Continue connected implementation in the current session while context is healthy, reuse fresh evidence, commit green checkpoints, and hand off only at a real boundary."
