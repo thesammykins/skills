@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "localSources": [
+    {
+      "id": "samantha-curated-skills",
+      "path": "~/Development/skills",
+      "skillsPath": ".",
+      "root": "https://github.com/thesammykins/skills",
+      "defaultScope": "global"
+    },
+    {
+      "id": "project-skills-plugin",
+      "path": "~/Development/skills/plugins/project-skills/skills",
+      "skillsPath": ".",
+      "root": "https://github.com/thesammykins/skills/tree/main/plugins/project-skills",
+      "defaultScope": "global"
+    },
+    {
+      "id": "samantha-amp-user-skills",
+      "path": "~/.cache/amp/repositories/ampcode.com-user-skills",
+      "skillsPath": ".",
+      "root": "amp-user-skills:@sammykins",
+      "defaultScope": "global"
+    },
+    {
+      "id": "warp-common-skills",
+      "path": "~/.cache/amp/repositories/warpdotdev-common-skills",
+      "skillsPath": ".agents/skills",
+      "root": "https://github.com/warpdotdev/common-skills",
+      "defaultScope": "global"
+    }
+  ],
+  "globalCandidates": [
+    "addressing-github-issues",
+    "agent-browser",
+    "agent-change-verification",
+    "anti-ai-slop",
+    "bounded-work-session",
+    "codebase-inspection",
+    "configuring-dependabot",
+    "convert-prompt",
+    "council",
+    "creating-conventional-branches",
+    "creating-conventional-commits",
+    "creating-github-sub-issues",
+    "cua-driver",
+    "diagnose-ci-failures",
+    "dogfood",
+    "done",
+    "gemini-large-context",
+    "gh-cli",
+    "git-master",
+    "hardening-github-actions",
+    "implement-specs",
+    "onepassword-agent",
+    "progressive-production-hardening",
+    "pushing-and-creating-pull-request",
+    "recurring-operational-monitor",
+    "reproduce-bug-report",
+    "resolve-merge-conflicts",
+    "respond-to-pr-comments-in-blocklist",
+    "review-pr",
+    "simplify",
+    "spec-driven-implementation",
+    "spike",
+    "systematic-debugging",
+    "update-skill",
+    "validate-changes-match-specs",
+    "validating-agent-skills",
+    "write-product-spec",
+    "write-tech-spec",
+    "writing-plans"
+  ]
+}
