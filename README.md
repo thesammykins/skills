@@ -1,28 +1,30 @@
-# Skills
+# Skills Repository
 
-This repository is a checked-in snapshot of Samantha's global agent skills. It mirrors the directories currently present in `~/.agents/skills`, except for `.system`.
+This repository is a personal mirror of the global agent skills installed under `~/.agents/skills`.
 
-## What is included
+## Repository contents
 
-- Every current non-system skill directory is copied under `skills/<name>/`.
-- This includes `happy-path-use-case-design` and skills installed locally by `npx skills`.
-- `.system` is deliberately excluded because Codex manages it and it is not part of this shareable skill set.
-- The repository does not include Hermes-only skills or any directory that is not present in the local `~/.agents/skills` snapshot.
+- `skills/` contains one directory for every skill currently present in `~/.agents/skills`, except `.system`.
+- The repository currently mirrors 42 non-system skill directories.
+- The files under `skills/` are the skill snapshot itself; this repository does not replace or modify the source projects that originally provided those skills.
+- `.system` is intentionally excluded because it is managed by Codex and is installation-specific.
+- Skills that normally come from `npx skills` remain in the snapshot when they are installed locally. Their names and refresh guidance are listed in `NPIX_INSTALL_NOTES.md`.
+- Skills installed only in other locations, such as Hermes-specific directories outside `~/.agents/skills`, are not part of this repository.
 
-The repository currently contains 42 skill directories. The authoritative list is `inventory.toml`; the files in `skills/` are the actual skill content.
+`inventory.toml` records the expected skill directories. `PROVENANCE.md` describes the snapshot's ownership boundaries.
 
-## How to use this repository
+## Using the snapshot
 
-To install the snapshot into another account's global skills directory, copy the directories under `skills/` into `~/.agents/skills/`. Do not copy `.system` from another installation.
+To reproduce this installation elsewhere, copy the directories under `skills/` into that account's `~/.agents/skills/` directory. Do not copy `.system`; let the destination tool manage its own system skills. For npx-managed skills, use the installer instructions in `NPIX_INSTALL_NOTES.md` when refreshing them.
 
-Skills whose normal installation is managed by `npx skills` are still checked in here because the goal is to preserve the current local snapshot. `NPIX_INSTALL_NOTES.md` lists those skills and explains that they should be refreshed with `npx skills@1.5.16` when you want the installer-managed version.
+## Synchronization
 
-## How it is maintained
+A synchronization updates the repository to match the local directory:
 
-1. Compare the repository with the current `~/.agents/skills` directory.
-2. Copy every non-system skill directory into `skills/`.
-3. Remove repository directories that no longer exist locally.
-4. Update `inventory.toml` and the npx notes.
-5. Verify that the repository and local non-system skill trees match byte-for-byte.
+1. Add new non-system directories from `~/.agents/skills`.
+2. Copy changed skill files.
+3. Remove directories no longer present locally.
+4. Update `inventory.toml` and `NPIX_INSTALL_NOTES.md`.
+5. Verify that `skills/` and the local non-system skill tree match byte-for-byte.
 
 `PROVENANCE.md` documents the source and ownership boundaries.
