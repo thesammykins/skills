@@ -2,13 +2,21 @@
 python = "3.13.12"
 
 [tasks.check]
-description = "Validate the complete skills catalog and vendored hashes."
-run = "python3 scripts/install-skills.py --check && python3 -m unittest discover -s tests -v"
+description = "Validate the skills catalog and run its tests."
+run = "python3 scripts/install-skills.py check && python3 -m unittest discover -s tests -v"
 
 [tasks.install]
-description = "Install every vendored and pinned upstream skill."
-run = "python3 scripts/install-skills.py \"$@\""
+description = "Install all or selected checked-in skills."
+run = "python3 scripts/install-skills.py install \"$@\""
+
+[tasks.install-external]
+description = "Preview or install reviewed skills from external repositories."
+run = "python3 scripts/install-skills.py external \"$@\""
 
 [tasks.verify]
-description = "Verify ~/.agents/skills against the desired catalog."
-run = "python3 scripts/install-skills.py --verify \"$@\""
+description = "Verify all or selected skills in ~/.agents/skills."
+run = "python3 scripts/install-skills.py verify \"$@\""
+
+[tasks.package]
+description = "Build deterministic individual and bundle archives."
+run = "python3 scripts/install-skills.py package"

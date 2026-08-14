@@ -1,7 +1,15 @@
 # Provenance
 
-The `skills/` tree is a snapshot of the non-system directories currently present in `~/.agents/skills`. It records the local files as they exist at synchronization time; it is not a claim that every skill is maintained by this repository.
+The `skills/` tree began as a snapshot of non-system directories from a local
+`~/.agents/skills` installation. The checked-in tree is now the source of truth
+for packaging and installation, but that does not establish authorship or an
+upstream source for each skill.
 
-`happy-path-use-case-design` is included because it is present in the local skill directory. Skills listed in `NPIX_INSTALL_NOTES.md` are also included when present locally, but their normal installation and refresh path is `npx skills@1.5.16`.
+`inventory.toml` records the current provenance and license status for packaged
+skills. `external-skills.toml` records verified upstream repositories and the
+revisions reviewed before those skills were removed from the vendored catalog.
+The external installer previews its commands by default and leaves network
+installation to an explicit `--apply` invocation.
 
-`.system` is managed by Codex and is intentionally excluded. Hermes-only directories outside `~/.agents/skills` are also excluded.
+`.system` is managed by Codex and is intentionally excluded. Project-specific
+and harness-managed skills outside this repository are not installed or pruned.

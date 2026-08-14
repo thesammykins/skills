@@ -1,0 +1,22 @@
+[tool]
+node_package = "node@22"
+skills_package = "skills@1.5.16"
+
+[[source]]
+repository = "warpdotdev/common-skills"
+reviewed_revision = "a7c81e872f1be8412b83bf783ee50983f2622910"
+skills = [
+  "council",
+  "diagnose-ci-failures",
+  "reproduce-bug-report",
+  "resolve-merge-conflicts",
+  "respond-to-pr-comments-in-blocklist",
+  "review-pr",
+  "update-skill",
+  "validate-changes-match-specs",
+]
+
+[[source]]
+repository = "bholmesdev/skills"
+reviewed_revision = "44da67bd1896cdafced6f60573b62ae71d18ef2a"
+skills = ["simplify"]

@@ -1,3 +1,6 @@
 [defaults]
-npx_package = "skills@1.5.16"
 catalog = "inventory.toml"
+
+[[ignored]]
+directory = ".system"
+reason = "managed by Codex; never vendored or installed by this repository"

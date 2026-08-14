@@ -51,6 +51,16 @@ license_status = "unresolved"
 path = "skills/bounded-work-session"
 
 [[skill]]
+directory = "check-impl-against-spec"
+install_name = "check-impl-against-spec"
+category = "agent-development"
+source_type = "local"
+provenance = "verified-local"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/check-impl-against-spec"
+
+[[skill]]
 directory = "codebase-inspection"
 install_name = "codebase-inspection"
 category = "agent-development"
@@ -81,14 +91,14 @@ license_status = "unresolved"
 path = "skills/convert-prompt"
 
 [[skill]]
-directory = "council"
-install_name = "council"
+directory = "create-pr"
+install_name = "create-pr"
 category = "agent-development"
 source_type = "local"
 provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
-path = "skills/council"
+path = "skills/create-pr"
 
 [[skill]]
 directory = "creating-conventional-branches"
@@ -119,26 +129,6 @@ provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
 path = "skills/creating-github-sub-issues"
-
-[[skill]]
-directory = "cua-driver"
-install_name = "cua-driver"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/cua-driver"
-
-[[skill]]
-directory = "diagnose-ci-failures"
-install_name = "diagnose-ci-failures"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/diagnose-ci-failures"
 
 [[skill]]
 directory = "dogfood"
@@ -281,54 +271,14 @@ license_status = "unresolved"
 path = "skills/recurring-operational-monitor"
 
 [[skill]]
-directory = "reproduce-bug-report"
-install_name = "reproduce-bug-report"
+directory = "saga"
+install_name = "saga"
 category = "agent-development"
 source_type = "local"
 provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
-path = "skills/reproduce-bug-report"
-
-[[skill]]
-directory = "resolve-merge-conflicts"
-install_name = "resolve-merge-conflicts"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/resolve-merge-conflicts"
-
-[[skill]]
-directory = "respond-to-pr-comments-in-blocklist"
-install_name = "respond-to-pr-comments-in-blocklist"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/respond-to-pr-comments-in-blocklist"
-
-[[skill]]
-directory = "review-pr"
-install_name = "review-pr"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/review-pr"
-
-[[skill]]
-directory = "simplify"
-install_name = "simplify"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/simplify"
+path = "skills/saga"
 
 [[skill]]
 directory = "spec-driven-implementation"
@@ -361,26 +311,6 @@ license_status = "unresolved"
 path = "skills/systematic-debugging"
 
 [[skill]]
-directory = "update-skill"
-install_name = "update-skill"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/update-skill"
-
-[[skill]]
-directory = "validate-changes-match-specs"
-install_name = "validate-changes-match-specs"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/validate-changes-match-specs"
-
-[[skill]]
 directory = "validating-agent-skills"
 install_name = "validating-agent-skills"
 category = "agent-development"
@@ -389,6 +319,16 @@ provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
 path = "skills/validating-agent-skills"
+
+[[skill]]
+directory = "write-feature-docs"
+install_name = "write-feature-docs"
+category = "agent-development"
+source_type = "local"
+provenance = "verified-local"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/write-feature-docs"
 
 [[skill]]
 directory = "write-product-spec"
@@ -409,6 +349,16 @@ provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
 path = "skills/write-tech-spec"
+
+[[skill]]
+directory = "writing-change-records"
+install_name = "writing-change-records"
+category = "agent-development"
+source_type = "local"
+provenance = "verified-local"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/writing-change-records"
 
 [[skill]]
 directory = "writing-plans"

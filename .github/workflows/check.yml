@@ -1,0 +1,30 @@
+name: Check skills
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Validate catalog and run tests
+        run: |
+          python3 scripts/install-skills.py check
+          python3 -m unittest discover -s tests -v
+
+      - name: Build release archives
+        run: python3 scripts/install-skills.py package
+
+      - name: Verify checksums
+        working-directory: dist
+        run: sha256sum --check SHA256SUMS
