@@ -1,0 +1,48 @@
+name: Release skills
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to release
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          persist-credentials: false
+
+      - name: Validate, test, and package
+        run: |
+          python3 scripts/install-skills.py check
+          python3 -m unittest discover -s tests -v
+          python3 scripts/install-skills.py package
+          cd dist
+          sha256sum --check SHA256SUMS
+
+      - name: Create immutable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" \
+            --verify-tag \
+            --title "Skills $RELEASE_TAG" \
+            --generate-notes \
+            dist/*.skill dist/skills-bundle.zip dist/SHA256SUMS
