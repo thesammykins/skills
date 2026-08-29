@@ -79,7 +79,7 @@ format directly.
 - `.github/workflows/release.yml` — immutable releases for existing `v*` tags.
 - `PROVENANCE.md` — source and ownership boundaries.
 
-The repository currently contains 37 packaged skills and 9 externally managed
+The repository currently contains 38 packaged skills and 9 externally managed
 skills. `.system` is intentionally absent because it is managed by Codex and is
 installation-specific.
 
