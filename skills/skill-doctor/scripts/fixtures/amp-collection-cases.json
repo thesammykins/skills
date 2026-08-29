@@ -1,0 +1,25 @@
+{
+  "active": [
+    {
+      "id": "T-019f0000-0000-7000-8000-000000000001",
+      "title": "Fix project parser",
+      "updated": "2026-08-20T10:05:00Z"
+    }
+  ],
+  "includingArchived": [
+    {
+      "id": "T-019f0000-0000-7000-8000-000000000001",
+      "title": "Fix project parser",
+      "updated": "2026-08-20T10:05:00Z"
+    },
+    {
+      "id": "T-019f0000-0000-7000-8000-000000000003",
+      "title": "Archived project work",
+      "updated": "2026-08-19T00:00:00Z"
+    }
+  ],
+  "inaccessible": {
+    "id": "T-019f0000-0000-7000-8000-000000000010",
+    "error": "403 forbidden"
+  }
+}

@@ -281,6 +281,21 @@ license_status = "unresolved"
 path = "skills/saga"
 
 [[skill]]
+directory = "skill-doctor"
+install_name = "skill-doctor"
+category = "agent-development"
+source_type = "fork"
+provenance = "verified-upstream"
+customization_status = "amp-adapted"
+license_status = "resolved-mit"
+path = "skills/skill-doctor"
+upstream_repository = "warpdotdev/common-skills"
+upstream_path = ".agents/skills/skill-doctor"
+upstream_revision = "f589e224907eda566c13755529f59db563090d14"
+adapted_repository = "https://ampcode.com/git/@sammykins/-/skills"
+adapted_revision = "365cc485bbf33c7ecdab860c6a73087bedfc654b"
+
+[[skill]]
 directory = "spec-driven-implementation"
 install_name = "spec-driven-implementation"
 category = "agent-development"
