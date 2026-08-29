@@ -1,0 +1,70 @@
+{
+  "id": "T-019f0000-0000-7000-8000-000000000001",
+  "title": "Fix project parser",
+  "created": 1786754990640,
+  "updatedAt": "2026-08-20T10:05:00Z",
+  "agentMode": "high",
+  "activatedSkills": ["agent-change-verification"],
+  "env": {
+    "initial": {
+      "workingDirectory": "file:///workspace/example",
+      "trees": [
+        {
+          "repository": {
+            "url": "https://github.com/example/project"
+          }
+        }
+      ]
+    }
+  },
+  "meta": {
+    "deleted": false,
+    "visibility": "private",
+    "projectID": "project-1"
+  },
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {"type": "text", "text": "Fix the parser regression."},
+        {"type": "text", "text": "internal routing metadata", "hidden": true}
+      ]
+    },
+    {
+      "role": "assistant",
+      "usage": {
+        "timestamp": "2026-08-20T10:01:00Z",
+        "model": "gpt-test",
+        "totalInputTokens": 120,
+        "outputTokens": 25,
+        "cacheReadInputTokens": 80
+      },
+      "content": [
+        {"type": "text", "text": "I will inspect and patch it."},
+        {"type": "tool_use", "name": "skill", "input": {"name": "agent-change-verification"}},
+        {"type": "tool_use", "name": "apply_patch", "input": {"patchText": "*** Begin Patch"}}
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "tool_result",
+          "toolUseID": "tool-1",
+          "run": {"status": "done", "result": {"output": "updated parser.py", "exitCode": 0}}
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "usage": {
+        "timestamp": "2026-08-20T10:05:00Z",
+        "model": "gpt-test",
+        "totalInputTokens": 160,
+        "outputTokens": 20,
+        "cacheReadInputTokens": 100
+      },
+      "content": [{"type": "text", "text": "The regression is fixed and tested."}]
+    }
+  ]
+}
