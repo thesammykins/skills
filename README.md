@@ -1,7 +1,9 @@
 # Skills Repository
 
 Public, installable Agent Skills for use across Amp, Claude Code, Codex, and
-other harnesses that discover the shared `.agents/skills` convention.
+other harnesses that discover the shared `.agents/skills` convention. On Sammy's
+Macs, `thesammykins/new-mac` installs these along with a separate private
+skills repository; this repository works on its own too.
 
 ## Install
 
@@ -51,9 +53,9 @@ python3 scripts/install-skills.py external --apply
 
 Pass `--project` for a project-local install, or repeat `--agent NAME` to target
 specific harnesses. `external-skills.toml` groups skills by verified source and
-pins the Node and `skills` CLI versions. It records the source revision that was
-reviewed; the current CLI installs from the repository's default branch, so the
-preview and explicit `--apply` boundary are intentional.
+pins the Node and `skills` CLI versions. `--apply` fetches each source at its
+reviewed revision and installs from that checkout, so an upstream change only
+arrives once the recorded revision is bumped.
 
 ## Release artifacts
 
