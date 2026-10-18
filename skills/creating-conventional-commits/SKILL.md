@@ -62,6 +62,7 @@ Guidelines:
 - Use an optional scope when it improves clarity, for example `fix(auth): handle token refresh`.
 - Use `!` for breaking changes and explain the break in the body or footer.
 - Add issue references in footers when relevant: `Closes #123`, `Fixes #123`, or `Refs #123`.
+- With trunk-based work the commit is often the only record, as there may be no PR. For anything beyond an obvious change, the body says what was wrong and why this fix, not which files changed or which commands ran. See [writing commit messages](references/writing-commit-messages.md).
 
 ### 5. Commit and Verify
 

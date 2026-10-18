@@ -54,4 +54,4 @@ Use the `creating-conventional-commits` skill. Include `Closes #ISSUE_NUMBER` (o
 
 - The working branch contains one or more conventional commits implementing the issue.
 - Acceptance criteria are demonstrably met.
-- Nothing has been pushed; the branch is ready for human review before invoking `pushing-and-creating-pull-request`.
+- Nothing has been pushed; the branch is ready for human review before invoking `creating-pull-requests`.

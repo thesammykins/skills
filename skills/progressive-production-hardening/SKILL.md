@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [production, rollout, observability, compatibility, rollback]
-    related_skills: [systematic-debugging, test-driven-development]
+    related_skills: [systematic-debugging]
 ---
 
 # Progressive Production Hardening

@@ -50,12 +50,11 @@ Entries expiring exactly at the current timestamp remained valid for one extra
 refresh cycle. Treat equality as expired so cache behaviour matches the
 documented boundary.
 
-The equality case now has regression coverage, and
-`go test ./internal/cache/...` passes.
+A regression test covers the equality case.
 ```
 
-The command is useful because the sentence first says which proposition the
-test covers.
+The test is worth one line because it names the exact boundary it protects.
+Passing local CI goes without saying.
 
 ## Standard change
 
@@ -70,12 +69,8 @@ the shared retry policy to this path so its timeout and backoff behaviour stays
 aligned with other storage operations; permanent errors still return
 immediately.
 
-### Validation
-
-- A regression covers a 503 followed by success and observes one persisted
-  write.
-- Existing permanent-failure coverage confirms those errors are not retried.
-- `pnpm test storage` passes.
+A new regression covers a 503 followed by success and sees exactly one
+persisted write, so the retry can't double-write.
 ```
 
 An `Approach` heading would add no value here because the decision already fits
@@ -151,19 +146,15 @@ Weak:
 - Ran git diff
 ```
 
-Better:
+Better, and only when the test proves something a reviewer would ask about:
 
 ```markdown
-### Evidence
-
-- The reconnect regression reproduces the stale-state failure before the fix
-  and passes when abandoned connections clear their state.
-- The connection suite passes with `pnpm test connection`.
+The new reconnect regression fails on the old code with the stale state and
+passes once abandoned connections clear it.
 ```
 
-Lint, formatting, type checking, and CI status can be useful merge-readiness
-facts, but they do not explain the behavioural outcome. Do not make them the
-substance of the PR.
+Local CI passing is a precondition for opening the PR, so never list lint,
+formatting, type checks or suite runs.
 
 ## Conditional information
 

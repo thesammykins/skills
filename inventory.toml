@@ -51,16 +51,6 @@ license_status = "unresolved"
 path = "skills/bounded-work-session"
 
 [[skill]]
-directory = "check-impl-against-spec"
-install_name = "check-impl-against-spec"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/check-impl-against-spec"
-
-[[skill]]
 directory = "codebase-inspection"
 install_name = "codebase-inspection"
 category = "agent-development"
@@ -91,16 +81,6 @@ license_status = "unresolved"
 path = "skills/convert-prompt"
 
 [[skill]]
-directory = "create-pr"
-install_name = "create-pr"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/create-pr"
-
-[[skill]]
 directory = "creating-conventional-branches"
 install_name = "creating-conventional-branches"
 category = "agent-development"
@@ -129,6 +109,16 @@ provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
 path = "skills/creating-github-sub-issues"
+
+[[skill]]
+directory = "creating-pull-requests"
+install_name = "creating-pull-requests"
+category = "agent-development"
+source_type = "local"
+provenance = "verified-local"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/creating-pull-requests"
 
 [[skill]]
 directory = "dogfood"
@@ -251,16 +241,6 @@ license_status = "unresolved"
 path = "skills/project-skills"
 
 [[skill]]
-directory = "pushing-and-creating-pull-request"
-install_name = "pushing-and-creating-pull-request"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/pushing-and-creating-pull-request"
-
-[[skill]]
 directory = "recurring-operational-monitor"
 install_name = "recurring-operational-monitor"
 category = "agent-development"
@@ -364,16 +344,6 @@ provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
 path = "skills/write-tech-spec"
-
-[[skill]]
-directory = "writing-change-records"
-install_name = "writing-change-records"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/writing-change-records"
 
 [[skill]]
 directory = "writing-plans"
