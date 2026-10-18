@@ -2,16 +2,6 @@
   "version": 1,
   "localSources": [
     {
-      "id": "sammy-derived-simplify",
-      "path": "~/.agents/local-sources",
-      "skillsPath": ".",
-      "root": "local:~/.agents/local-sources",
-      "defaultScope": "global",
-      "kind": "derived",
-      "upstream": "https://github.com/bholmesdev/skills",
-      "provenance": "simplify/origin.json"
-    },
-    {
       "id": "samantha-curated-skills",
       "path": "~/Development/skills",
       "skillsPath": ".",

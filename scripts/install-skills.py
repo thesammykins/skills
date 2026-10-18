@@ -210,7 +210,49 @@ def checkout_reviewed_revision(repository: str, revision: str, destination: Path
     subprocess.run([*git, "checkout", "--quiet", "--detach", "FETCH_HEAD"], check=True)
 
 
-def install_external(*, apply: bool, project: bool, agents: list[str] | None = None) -> None:
+def node_runner(tool: dict) -> list[str]:
+    """Prefix that makes npx available.
+
+    A fresh Mac has no global Node: projects pin their own. mise (in the dev
+    Brewfile tier) can run the pinned Node for this one command instead.
+    """
+    if shutil.which("npx"):
+        return []
+    if shutil.which("mise"):
+        return ["mise", "exec", tool["node_package"], "--"]
+    raise SkillsError("external skills need Node.js: install mise (dev Brewfile tier) or Node, then retry")
+
+
+def skill_dir_in(checkout: Path, name: str) -> Path | None:
+    for skill_file in sorted(checkout.rglob("SKILL.md")):
+        if skill_file.parent.name == name:
+            return skill_file.parent
+    return None
+
+
+def unchanged_or_new(sources: dict[str, Path], target: Path, *, force: bool) -> dict[str, list[str]]:
+    """Skills per repository that are safe to (re)install.
+
+    The skills CLI replaces whatever is installed. A skill whose installed copy
+    differs from the reviewed revision may hold local edits, so it is skipped
+    unless --force is given.
+    """
+    external_manifest = load_external_manifest()
+    selected: dict[str, list[str]] = {}
+    for source in external_manifest["source"]:
+        keep: list[str] = []
+        for name in source["skills"]:
+            installed = target / name
+            pinned = skill_dir_in(sources[source["repository"]], name)
+            if installed.is_dir() and pinned is not None and not force and tree_digest(installed) != tree_digest(pinned):
+                print(f"skipping {name}: the installed copy differs from {source['repository']}@{source['reviewed_revision'][:12]}; rerun with --force to replace it")
+                continue
+            keep.append(name)
+        selected[source["repository"]] = keep
+    return selected
+
+
+def install_external(*, apply: bool, project: bool, agents: list[str] | None = None, force: bool = False) -> None:
     external_manifest = load_external_manifest()
     if not apply:
         print("External skill install preview (no commands were run):")
@@ -221,16 +263,24 @@ def install_external(*, apply: bool, project: bool, agents: list[str] | None = N
         print("Run again with --apply to download and install these reviewed sources.")
         return
 
+    prefix = node_runner(external_manifest["tool"])
     environment = os.environ.copy()
     environment["DISABLE_TELEMETRY"] = "1"
+    target = Path.cwd() / ".agents" / "skills" if project else DEFAULT_INSTALL_ROOT
     with tempfile.TemporaryDirectory(prefix="external-skills-") as temporary:
         sources: dict[str, Path] = {}
         for index, source in enumerate(external_manifest["source"]):
             checkout = Path(temporary) / str(index)
             checkout_reviewed_revision(source["repository"], source["reviewed_revision"], checkout)
             sources[source["repository"]] = checkout
-        for command in external_commands(project=project, agents=agents, sources=sources):
-            subprocess.run(command, check=True, env=environment)
+        allowed = unchanged_or_new(sources, target, force=force)
+        for source, command in zip(external_manifest["source"], external_commands(project=project, agents=agents, sources=sources)):
+            names = allowed[source["repository"]]
+            if not names:
+                continue
+            start = command.index("--skill") + 1
+            end = command.index("--agent")
+            subprocess.run([*prefix, *command[:start], *names, *command[end:]], check=True, env=environment)
 
 
 def select_skills(manifest: dict, requested: list[str] | None) -> list[str]:
@@ -403,6 +453,9 @@ def parse_args() -> argparse.Namespace:
     external_parser.add_argument(
         "--agent", action="append", dest="agents", metavar="NAME", help="target agent (default: all)"
     )
+    external_parser.add_argument(
+        "--force", action="store_true", help="replace installed external skills that differ from the reviewed revision"
+    )
     return parser.parse_args()
 
 
@@ -416,7 +469,7 @@ def main() -> int:
             package(manifest, args.output)
         elif args.command == "external":
             check(manifest, quiet=True)
-            install_external(apply=args.apply, project=args.project, agents=args.agents)
+            install_external(apply=args.apply, project=args.project, agents=args.agents, force=args.force)
         else:
             names = select_skills(manifest, args.skills)
             target = resolve_target(args)

@@ -1,0 +1,19 @@
+{
+  "kind": "derived",
+  "upstream": {
+    "source": "bholmesdev/skills",
+    "sourceType": "github",
+    "sourceUrl": "https://github.com/bholmesdev/skills.git",
+    "skillPath": "skills/simplify/SKILL.md",
+    "skillFolderHash": "2a318b3c0e4ba1d80785efd1fe2b37ea188947ab",
+    "installedAt": "2026-08-08T03:35:47.822Z",
+    "updatedAt": "2026-08-08T03:35:47.822Z"
+  },
+  "localSource": "~/.agents/local-sources/simplify",
+  "updatedAt": "2026-09-05",
+  "changes": [
+    "Limit cleanup to one task-scoped pass.",
+    "Preserve established domain names.",
+    "Use complementary diff views and preserve verification in the parent handoff."
+  ]
+}

@@ -7,10 +7,12 @@ skills repository; this repository works on its own too.
 
 ## Install
 
-Clone the repository, then install every checked-in skill globally:
+Clone the repository, then install every checked-in skill globally. The
+installer needs Python 3.11 or newer (macOS's own `python3` is older), so run
+it through mise, which pins the version in `mise.toml`:
 
 ```bash
-python3 scripts/install-skills.py install
+mise exec -- python scripts/install-skills.py install
 ```
 
 The installer copies complete skill directories into `~/.agents/skills`. It
@@ -22,7 +24,7 @@ intentional.
 Install one or more skills:
 
 ```bash
-python3 scripts/install-skills.py install \
+mise exec -- python scripts/install-skills.py install \
   --skill agent-change-verification \
   --skill dogfood
 ```
@@ -30,7 +32,7 @@ python3 scripts/install-skills.py install \
 Install project-local skills into `./.agents/skills`:
 
 ```bash
-python3 scripts/install-skills.py install --project
+mise exec -- python scripts/install-skills.py install --project
 ```
 
 Use `--target PATH` for another harness-specific location. The installer copies
@@ -42,13 +44,13 @@ Skills with maintained upstream equivalents are intentionally not vendored.
 Preview the reviewed `npx skills` commands without downloading anything:
 
 ```bash
-python3 scripts/install-skills.py external
+mise exec -- python scripts/install-skills.py external
 ```
 
 Install those skills globally for every supported agent harness:
 
 ```bash
-python3 scripts/install-skills.py external --apply
+mise exec -- python scripts/install-skills.py external --apply
 ```
 
 Pass `--project` for a project-local install, or repeat `--agent NAME` to target
@@ -88,9 +90,9 @@ installation-specific.
 ## Develop and verify
 
 ```bash
-python3 scripts/install-skills.py check
-python3 -m unittest discover -s tests -v
-python3 scripts/install-skills.py package
+mise exec -- python scripts/install-skills.py check
+mise exec -- python -m unittest discover -s tests -v
+mise exec -- python scripts/install-skills.py package
 (cd dist && sha256sum --check SHA256SUMS)
 ```
 
@@ -98,5 +100,5 @@ Packaging is deterministic: identical source trees produce byte-identical
 archives. To verify a global installation against this checkout:
 
 ```bash
-python3 scripts/install-skills.py verify
+mise exec -- python scripts/install-skills.py verify
 ```

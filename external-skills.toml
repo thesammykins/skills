@@ -12,8 +12,3 @@ skills = [
   "update-skill",
   "validate-changes-match-specs",
 ]
-
-[[source]]
-repository = "bholmesdev/skills"
-reviewed_revision = "44da67bd1896cdafced6f60573b62ae71d18ef2a"
-skills = ["simplify"]

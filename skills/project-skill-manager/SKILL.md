@@ -14,10 +14,10 @@ repository that needs them.
    specialist skill only when it will materially improve the current task.
 3. Reuse a matching skill in `<project>/.agents/skills` before installing one.
 4. Prefer an exact match from
-   `/Users/sammykins/.agents/project-skills-library`. From the project root, run:
+   `~/.agents/project-skills-library`. From the project root, run:
 
    ```bash
-   npx skills add /Users/sammykins/.agents/project-skills-library/<skill> --agent codex --yes
+   npx skills add ~/.agents/project-skills-library/<skill> --agent codex --yes
    ```
 
 5. If the local library has no match, use `npx skills find <language-or-sdk>`,

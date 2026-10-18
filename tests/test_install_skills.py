@@ -73,7 +73,7 @@ class SkillsToolTests(unittest.TestCase):
 
     def test_external_commands_are_pinned_and_global_by_default(self) -> None:
         commands = MODULE.external_commands(project=False)
-        self.assertEqual(len(commands), 2)
+        self.assertEqual(len(commands), len(MODULE.load_external_manifest()["source"]))
         self.assertEqual(
             commands[0][:7],
             ["npx", "--yes", "-p", "node@22", "-p", "skills@1.5.16", "skills"],
@@ -83,25 +83,71 @@ class SkillsToolTests(unittest.TestCase):
         self.assertEqual(commands[0][-1], "--global")
         self.assertIn("*", commands[0])
 
+    def fake_checkouts(self, root: Path, edited: set[str] = frozenset()):
+        """Stand-in for checkout_reviewed_revision that writes each pinned skill."""
+        def checkout(repository: str, revision: str, destination: Path) -> None:
+            source = next(s for s in MODULE.load_external_manifest()["source"] if s["repository"] == repository)
+            for name in source["skills"]:
+                (destination / "skills" / name).mkdir(parents=True)
+                (destination / "skills" / name / "SKILL.md").write_text(f"---\nname: {name}\n---\npinned\n")
+        return checkout
+
     def test_external_install_only_runs_with_apply(self) -> None:
-        with mock.patch.object(MODULE.subprocess, "run") as run:
+        with tempfile.TemporaryDirectory() as temporary, mock.patch.object(MODULE.subprocess, "run") as run:
             MODULE.install_external(apply=False, project=True, agents=["codex"])
             run.assert_not_called()
 
-            MODULE.install_external(apply=True, project=True, agents=["codex"])
-            calls = [call for call in run.call_args_list]
-            fetches = [call.args[0] for call in calls if "fetch" in call.args[0]]
-            installs = [call for call in calls if call.args[0][0] == "npx"]
-            self.assertEqual(len(installs), 2)
+            with (
+                mock.patch.object(MODULE, "checkout_reviewed_revision", side_effect=self.fake_checkouts(Path(temporary))) as checkout,
+                mock.patch.object(MODULE.shutil, "which", return_value="/usr/bin/npx"),
+                mock.patch.object(MODULE.Path, "cwd", return_value=Path(temporary)),
+            ):
+                MODULE.install_external(apply=True, project=True, agents=["codex"])
             # Each source is fetched at its reviewed commit and installed from
             # that local checkout, not from the repository's current tip.
             revisions = {source["reviewed_revision"] for source in MODULE.load_external_manifest()["source"]}
-            self.assertEqual({fetch[-1] for fetch in fetches}, revisions)
-            command = installs[0].args[0]
+            self.assertEqual({call.args[1] for call in checkout.call_args_list}, revisions)
+            command = run.call_args_list[0].args[0]
+            self.assertEqual(command[0], "npx")
             self.assertTrue(command[command.index("add") + 1].startswith("/"))
             self.assertNotIn("--global", command)
             self.assertEqual(command[command.index("--agent") + 1], "codex")
-            self.assertEqual(installs[0].kwargs["env"]["DISABLE_TELEMETRY"], "1")
+            self.assertEqual(run.call_args_list[0].kwargs["env"]["DISABLE_TELEMETRY"], "1")
+
+    def test_external_install_skips_locally_edited_skills_unless_forced(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary)
+            edited = project / ".agents/skills/council"
+            edited.mkdir(parents=True)
+            (edited / "SKILL.md").write_text("---\nname: council\n---\nmy edits\n")
+            for force, expect_council in ((False, False), (True, True)):
+                with (
+                    mock.patch.object(MODULE.subprocess, "run") as run,
+                    mock.patch.object(MODULE, "checkout_reviewed_revision", side_effect=self.fake_checkouts(project)),
+                    mock.patch.object(MODULE.shutil, "which", return_value="/usr/bin/npx"),
+                    mock.patch.object(MODULE.Path, "cwd", return_value=project),
+                ):
+                    MODULE.install_external(apply=True, project=True, force=force)
+                installed = [arg for call in run.call_args_list for arg in call.args[0]]
+                self.assertEqual("council" in installed, expect_council)
+                self.assertIn("review-pr", installed)
+
+    def test_external_install_uses_mise_node_when_npx_is_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            which = lambda tool: "/opt/homebrew/bin/mise" if tool == "mise" else None  # noqa: E731
+            with (
+                mock.patch.object(MODULE.subprocess, "run") as run,
+                mock.patch.object(MODULE, "checkout_reviewed_revision", side_effect=self.fake_checkouts(Path(temporary))),
+                mock.patch.object(MODULE.shutil, "which", side_effect=which),
+                mock.patch.object(MODULE.Path, "cwd", return_value=Path(temporary)),
+            ):
+                MODULE.install_external(apply=True, project=True)
+            self.assertEqual(run.call_args_list[0].args[0][:4], ["mise", "exec", "node@22", "--"])
+
+    def test_external_install_without_node_or_mise_explains_what_to_install(self) -> None:
+        with mock.patch.object(MODULE.shutil, "which", return_value=None), self.assertRaises(MODULE.SkillsError) as error:
+            MODULE.install_external(apply=True, project=True)
+        self.assertIn("Node.js", str(error.exception))
 
     def test_verify_ignores_unmanaged_skills_and_system_directory(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

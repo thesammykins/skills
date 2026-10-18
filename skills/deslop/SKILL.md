@@ -24,7 +24,7 @@ Slop makes writing less specific and more exaggerated at the same time. A concre
 
 ## Required references
 
-On every invocation, read `/Users/sammykins/.agents/skills/deslop/references/patterns.md` before diagnosing or editing. For edit and silent modes, also read `/Users/sammykins/.agents/skills/deslop/references/eval.md` and apply it to the cleaned draft before responding. These bundled files are authoritative for this skill. Do not search other spaces for alternate rule files.
+On every invocation, read this skill's `references/patterns.md` before diagnosing or editing. For edit and silent modes, also read this skill's `references/eval.md` and apply it to the cleaned draft before responding. These bundled files are authoritative for this skill. Do not search other spaces for alternate rule files.
 
 ## Modes
 
