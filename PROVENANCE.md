@@ -23,5 +23,6 @@ copied from the installed set on 2026-10-19 so every Mac gets them. Several
 came from third-party collections; their upstream source and license still
 need confirming. Where a `LICENSE.txt` ships with a skill, it is kept as-is.
 
-Skills listed under `[[ignored]]` in `skills.toml` are installed on a Mac but
-deliberately not published here: tool-managed ones, and personal ones kept in a private repository.
+Skills listed under `[[ignored]]` in `skills.toml` are installed on a Mac by
+another tool and are not published here. Personal skills live in a separate
+private repository and are not listed in this one.

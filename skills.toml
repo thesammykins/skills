@@ -13,5 +13,3 @@ reason = "symlink managed by the cua-driver installer (~/.cua-driver)"
 directory = "mobilebuildmcp-cli"
 reason = "installed and updated by MobileBuildMCP; RosterEase also keeps a project-local copy"
 
-
-
