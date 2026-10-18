@@ -4,3 +4,14 @@ catalog = "inventory.toml"
 [[ignored]]
 directory = ".system"
 reason = "managed by Codex; never vendored or installed by this repository"
+
+[[ignored]]
+directory = "cua-driver"
+reason = "symlink managed by the cua-driver installer (~/.cua-driver)"
+
+[[ignored]]
+directory = "mobilebuildmcp-cli"
+reason = "installed and updated by MobileBuildMCP; RosterEase also keeps a project-local copy"
+
+
+

@@ -31,6 +31,16 @@ license_status = "unresolved"
 path = "skills/agent-change-verification"
 
 [[skill]]
+directory = "alt-text"
+install_name = "alt-text"
+category = "agent-development"
+source_type = "local"
+provenance = "unverified-import"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/alt-text"
+
+[[skill]]
 directory = "anti-ai-slop"
 install_name = "anti-ai-slop"
 category = "agent-development"
@@ -51,6 +61,16 @@ license_status = "unresolved"
 path = "skills/bounded-work-session"
 
 [[skill]]
+directory = "cicd-security"
+install_name = "cicd-security"
+category = "agent-development"
+source_type = "local"
+provenance = "unverified-import"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/cicd-security"
+
+[[skill]]
 directory = "configuring-dependabot"
 install_name = "configuring-dependabot"
 category = "agent-development"
@@ -69,6 +89,16 @@ provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
 path = "skills/convert-prompt"
+
+[[skill]]
+directory = "copywriting"
+install_name = "copywriting"
+category = "agent-development"
+source_type = "local"
+provenance = "unverified-import"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/copywriting"
 
 [[skill]]
 directory = "creating-conventional-branches"
@@ -111,6 +141,16 @@ license_status = "unresolved"
 path = "skills/creating-pull-requests"
 
 [[skill]]
+directory = "deslop"
+install_name = "deslop"
+category = "agent-development"
+source_type = "local"
+provenance = "unverified-import"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/deslop"
+
+[[skill]]
 directory = "dogfood"
 install_name = "dogfood"
 category = "agent-development"
@@ -129,6 +169,16 @@ provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
 path = "skills/done"
+
+[[skill]]
+directory = "free-disk-space"
+install_name = "free-disk-space"
+category = "agent-development"
+source_type = "local"
+provenance = "unverified-import"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/free-disk-space"
 
 [[skill]]
 directory = "gh-cli"
@@ -191,6 +241,26 @@ license_status = "unresolved"
 path = "skills/onepassword-agent"
 
 [[skill]]
+directory = "open-pencil"
+install_name = "open-pencil"
+category = "agent-development"
+source_type = "local"
+provenance = "unverified-import"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/open-pencil"
+
+[[skill]]
+directory = "pdf"
+install_name = "pdf"
+category = "agent-development"
+source_type = "local"
+provenance = "unverified-import"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/pdf"
+
+[[skill]]
 directory = "progressive-production-hardening"
 install_name = "progressive-production-hardening"
 category = "agent-development"
@@ -199,6 +269,16 @@ provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
 path = "skills/progressive-production-hardening"
+
+[[skill]]
+directory = "project-skill-manager"
+install_name = "project-skill-manager"
+category = "agent-development"
+source_type = "local"
+provenance = "unverified-import"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/project-skill-manager"
 
 [[skill]]
 directory = "project-skills"
@@ -231,6 +311,26 @@ license_status = "unresolved"
 path = "skills/saga"
 
 [[skill]]
+directory = "screenshot"
+install_name = "screenshot"
+category = "agent-development"
+source_type = "local"
+provenance = "unverified-import"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/screenshot"
+
+[[skill]]
+directory = "security-threat-model"
+install_name = "security-threat-model"
+category = "agent-development"
+source_type = "local"
+provenance = "unverified-import"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/security-threat-model"
+
+[[skill]]
 directory = "spec-driven-implementation"
 install_name = "spec-driven-implementation"
 category = "agent-development"
@@ -259,6 +359,16 @@ provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
 path = "skills/systematic-debugging"
+
+[[skill]]
+directory = "transcribe"
+install_name = "transcribe"
+category = "agent-development"
+source_type = "local"
+provenance = "unverified-import"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/transcribe"
 
 [[skill]]
 directory = "validating-agent-skills"
