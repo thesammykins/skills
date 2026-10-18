@@ -89,11 +89,19 @@ class SkillsToolTests(unittest.TestCase):
             run.assert_not_called()
 
             MODULE.install_external(apply=True, project=True, agents=["codex"])
-            self.assertEqual(run.call_count, 2)
-            command = run.call_args_list[0].args[0]
+            calls = [call for call in run.call_args_list]
+            fetches = [call.args[0] for call in calls if "fetch" in call.args[0]]
+            installs = [call for call in calls if call.args[0][0] == "npx"]
+            self.assertEqual(len(installs), 2)
+            # Each source is fetched at its reviewed commit and installed from
+            # that local checkout, not from the repository's current tip.
+            revisions = {source["reviewed_revision"] for source in MODULE.load_external_manifest()["source"]}
+            self.assertEqual({fetch[-1] for fetch in fetches}, revisions)
+            command = installs[0].args[0]
+            self.assertTrue(command[command.index("add") + 1].startswith("/"))
             self.assertNotIn("--global", command)
             self.assertEqual(command[command.index("--agent") + 1], "codex")
-            self.assertEqual(run.call_args_list[0].kwargs["env"]["DISABLE_TELEMETRY"], "1")
+            self.assertEqual(installs[0].kwargs["env"]["DISABLE_TELEMETRY"], "1")
 
     def test_verify_ignores_unmanaged_skills_and_system_directory(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

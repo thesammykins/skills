@@ -167,12 +167,19 @@ def check(manifest: dict, *, quiet: bool = False) -> None:
         )
 
 
-def external_commands(*, project: bool, agents: list[str] | None = None) -> list[list[str]]:
+def external_commands(*, project: bool, agents: list[str] | None = None, sources: dict[str, Path] | None = None) -> list[list[str]]:
+    """npx commands that install each reviewed external source.
+
+    `sources` maps a repository to a local checkout of its reviewed revision.
+    The skills CLI only fetches a branch tip, so installing from that checkout
+    is what pins the revision; without it the command names the repository.
+    """
     external_manifest = load_external_manifest()
     tool = external_manifest["tool"]
     selected_agents = agents or ["*"]
     commands: list[list[str]] = []
     for source in external_manifest["source"]:
+        location = str((sources or {}).get(source["repository"], source["repository"]))
         command = [
             "npx",
             "--yes",
@@ -182,7 +189,7 @@ def external_commands(*, project: bool, agents: list[str] | None = None) -> list
             tool["skills_package"],
             "skills",
             "add",
-            source["repository"],
+            location,
             "--skill",
             *source["skills"],
             "--agent",
@@ -195,19 +202,35 @@ def external_commands(*, project: bool, agents: list[str] | None = None) -> list
     return commands
 
 
+def checkout_reviewed_revision(repository: str, revision: str, destination: Path) -> None:
+    destination.mkdir(parents=True)
+    git = ["git", "-C", str(destination)]
+    subprocess.run([*git, "init", "--quiet"], check=True)
+    subprocess.run([*git, "fetch", "--quiet", "--depth", "1", f"https://github.com/{repository}.git", revision], check=True)
+    subprocess.run([*git, "checkout", "--quiet", "--detach", "FETCH_HEAD"], check=True)
+
+
 def install_external(*, apply: bool, project: bool, agents: list[str] | None = None) -> None:
-    commands = external_commands(project=project, agents=agents)
+    external_manifest = load_external_manifest()
     if not apply:
         print("External skill install preview (no commands were run):")
-        for command in commands:
+        for source in external_manifest["source"]:
+            print(f"# {source['repository']} at reviewed revision {source['reviewed_revision']}")
+        for command in external_commands(project=project, agents=agents):
             print(shlex.join(command))
         print("Run again with --apply to download and install these reviewed sources.")
         return
 
     environment = os.environ.copy()
     environment["DISABLE_TELEMETRY"] = "1"
-    for command in commands:
-        subprocess.run(command, check=True, env=environment)
+    with tempfile.TemporaryDirectory(prefix="external-skills-") as temporary:
+        sources: dict[str, Path] = {}
+        for index, source in enumerate(external_manifest["source"]):
+            checkout = Path(temporary) / str(index)
+            checkout_reviewed_revision(source["repository"], source["reviewed_revision"], checkout)
+            sources[source["repository"]] = checkout
+        for command in external_commands(project=project, agents=agents, sources=sources):
+            subprocess.run(command, check=True, env=environment)
 
 
 def select_skills(manifest: dict, requested: list[str] | None) -> list[str]:
