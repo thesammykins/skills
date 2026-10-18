@@ -18,13 +18,14 @@ Use the lowest level that can disprove each claim; high-risk claims usually need
 | Change shape | Minimum useful evidence | Add when risk warrants |
 |---|---|---|
 | Pure function/business rule | focused examples at boundaries | property-based test for broad input space; mutation/sabotage check that the test bites |
-| Bug fix | red reproduction, root-cause fix, regression test | restore old behavior temporarily and prove regression goes red |
+| Bug fix | reproduce the failure and check the corrected behavior | retain a regression test when practical; use the observed pre-fix failure rather than repeating sabotage |
 | Parser/serializer | valid/invalid examples, round trip | fuzz/property testing, corpus replay, resource limits |
 | API/schema/event | producer/consumer checks | consumer-driven contract verification, old/new version compatibility matrix |
 | Database migration | forward migration on production-like copy | invariants/counts, old+new app compatibility, rollback or roll-forward rehearsal |
 | Auth/permissions | positive and negative role matrix | OWASP ASVS requirement IDs, tenant-isolation and confused-deputy probes, independent review |
 | CLI | command exit/status/stdout/stderr and filesystem effects | old/current CLI versions, shell/platform matrix, install/package path |
-| Web UI | real interaction and DOM assertions | recording plus trace, console/network review, screenshots for key states, responsive/keyboard/reduced-motion checks |
+| Static UI/layout/style | inspected final-artifact screenshots and relevant interaction checks | DOM assertions, responsive/keyboard checks, existing visual regression tests |
+| UI behavior | exercise the changed user path and observable state | automated regression for meaningful behavior; trace/console/network review; recording for temporal claims |
 | Motion | final-revision recording and endpoints | validate measured FPS; extract timestamped decoded frames around transitions; inspect jitter, stalls, flashes, layout shift and interruption paths |
 | Async/concurrency | deterministic state-transition test | stress/repetition, injected delay, idempotency/retry/duplicate-delivery probes |
 | External integration | sandbox/test-provider round trip | callback signature/replay tests, provider read-back, teardown proof |
@@ -32,11 +33,23 @@ Use the lowest level that can disprove each claim; high-risk claims usually need
 | Infrastructure/config | syntax/plan/dry-run plus diff | canary, health thresholds, rollback rehearsal, live read-back |
 | Automation/cron | foreground sample and deterministic decision tests | duplicate, empty, failure, recovery, delivery and monitor-health paths |
 
+## Choosing whether to write a test
+
+Separate exploratory probes, verification of the current result, and durable
+regression protection. Reuse existing tests first. Add or extend tests when they
+protect meaningful behavior or an implicated high-risk boundary; do not test
+incidental helper structure, trivial reversible edits, or the same assertion twice.
+Expected results must come from a specification, reproduced defect, known fixture,
+or independent reference, not from copying the implementation's assumptions.
+Use test-first for clear contracts and explore-first for uncertain designs.
+Project-required checks remain binding. No test-count or coverage target replaces
+proof at the actual boundary.
+
 ## Test quality probes
 
 A passing test is useful only if it could fail for the defect or invariant.
 
-- **Sabotage:** temporarily restore the old behavior or invert the changed branch; the new regression must fail.
+- **Fault detection:** use a recorded pre-fix failure, or temporarily restore old behavior in an isolated fixture/worktree; a retained regression should fail for the intended defect. Avoid redundant sabotage and preserve unrelated work.
 - **Property:** express a rule over a generated input domain when examples cannot cover the state space. Prefer installed property-testing tools; do not add one for a single trivial example.
 - **Contract:** test the actual client/producer and replay its minimal expectations against the real provider. Contract tests verify compatibility, not business side effects.
 - **Differential:** compare old/new implementation, versions, providers, or datasets on the same corpus.
@@ -59,13 +72,13 @@ Do not take the Cartesian product blindly. Add a dimension only when the diff ca
 When Playwright is already present, prefer:
 
 - trace retained on failure or first retry;
-- recording is mandatory where visual or temporal claims exist; screenshots support key states but cannot prove a transition;
+- inspected screenshots for static appearance; an inspected recording for temporal claims; a still cannot prove a transition;
 - trace inspection of action snapshots, console, errors, network, and metadata;
 - device/viewport, locale, timezone, permissions, color scheme and offline emulation only when implicated.
 
 Do not upload traces containing secrets or personal data. Playwright's hosted trace viewer processes traces in-browser, but local inspection is still preferable for sensitive artifacts.
 
-For visual, animation, transition, scroll, drag, canvas/WebGL, or time-dependent interaction changes, load `references/visual-motion-verification.md`. The required pattern is record → validate media metadata → watch → extract timestamped frames → inspect contact sheets and suspicious frames → correlate with trace/runtime evidence → recapture after fixes. A video that was produced but not inspected is only an artifact, not evidence.
+For visual changes, follow `references/visual-motion-verification.md`. Static claims use inspected screenshots and relevant interactions. For animation, transition, scroll, drag, or other time-dependent claims (including animated canvas/WebGL), the pattern is record → validate media metadata → watch → extract timestamped frames → inspect contact sheets and suspicious frames → correlate with trace/runtime evidence → recapture after fixes. A video that was produced but not inspected is only an artifact, not evidence.
 
 ## Accessibility evidence
 

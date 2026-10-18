@@ -42,11 +42,13 @@
       "sources": [
         {
           "root": "https://github.com/twostraws/Swift-Concurrency-Agent-Skill",
-          "skill": "swift-concurrency-pro"
+          "skill": "swift-concurrency-pro",
+          "optionalWhen": "Concurrency implementation or review uses async/await, actors, Sendable, or an explicit migration request."
         },
         {
           "root": "https://github.com/twostraws/Swift-Testing-Agent-Skill",
-          "skill": "swift-testing-pro"
+          "skill": "swift-testing-pro",
+          "optionalWhen": "The project uses or is adopting Swift Testing; do not infer it from XCTest alone."
         },
         {
           "root": "https://github.com/twostraws/SwiftData-Agent-Skill",
@@ -58,7 +60,8 @@
           "skill": "core-data-expert",
           "optionalWhen": "The project imports Core Data."
         }
-      ]
+      ],
+      "notes": "Select concurrency and testing skills only when those capabilities are used or requested. A Swift package or Xcode project does not imply iOS, SwiftUI, persistence, or release tooling."
     },
     {
       "id": "apple-platform-runtime",
@@ -74,7 +77,7 @@
           "skill": "xcodebuildmcp"
         }
       ],
-      "notes": "The eventual plugin may also carry the XcodeBuildMCP server configuration; do not enable unrelated upstream repository-review skills."
+      "notes": "Select one build/debug provider already usable by this client. A skill alone does not install or enable an MCP server. Verify tool availability; otherwise use the repository-established CLI. Do not enable unrelated repository-review skills."
     },
     {
       "id": "xcode-build-performance",
@@ -186,6 +189,135 @@
           "skill": "portal"
         }
       ]
+    },
+    {
+      "id": "swiftui",
+      "activation": "automatic",
+      "evidenceAny": [
+        "**/*.swift"
+      ],
+      "requiresEvidence": [
+        "Swift sources import SwiftUI or the user explicitly requests adopting SwiftUI."
+      ],
+      "sources": [
+        {
+          "root": "https://github.com/twostraws/SwiftUI-Agent-Skill",
+          "skill": "swiftui-pro",
+          "skillPath": "swiftui-pro/SKILL.md",
+          "verifiedAt": "2026-09-05",
+          "capability": "SwiftUI implementation and review"
+        }
+      ],
+      "availablePluginAlternatives": [
+        {
+          "plugin": "build-ios-apps",
+          "skill": "swiftui-ui-patterns",
+          "when": "An iOS target uses SwiftUI."
+        },
+        {
+          "plugin": "build-macos-apps",
+          "skill": "swiftui-patterns",
+          "when": "A macOS target uses SwiftUI."
+        }
+      ]
+    },
+    {
+      "id": "apple-ui-design",
+      "activation": "automatic",
+      "evidenceAny": [
+        "*.xcodeproj",
+        "*.xcworkspace",
+        "Package.swift",
+        "**/*.swift"
+      ],
+      "requiresEvidence": [
+        "An Apple platform UI target is confirmed, or the user explicitly requests Apple HIG review."
+      ],
+      "sources": [
+        {
+          "root": "https://github.com/milistu/agent-skills",
+          "skill": "apple-human-interface-guidelines",
+          "skillPath": "skills/apple-human-interface-guidelines/SKILL.md",
+          "verifiedAt": "2026-09-05",
+          "capability": "Apple HIG reference",
+          "notes": "Third-party reference, not Apple certification. Read only relevant topics and verify current platform-specific claims against official Apple HIG. Recheck reference paths before installation."
+        }
+      ]
+    },
+    {
+      "id": "ios-app",
+      "activation": "automatic",
+      "evidenceAny": [
+        "*.xcodeproj",
+        "*.xcworkspace",
+        "Package.swift"
+      ],
+      "requiresEvidence": [
+        "An application target supports iOS or iPadOS, confirmed from build settings or manifest target configuration."
+      ],
+      "sources": [],
+      "composeProfiles": [
+        "swift",
+        "apple-ui-design",
+        "apple-platform-runtime"
+      ],
+      "optionalProfiles": {
+        "swiftui": "SwiftUI imports or requested adoption.",
+        "app-store-connect": "TestFlight or App Store delivery is configured or explicitly requested.",
+        "xcode-build-performance": "Build-time investigation is requested."
+      },
+      "availablePluginAlternatives": [
+        {
+          "plugin": "build-ios-apps",
+          "skill": "ios-debugger-agent",
+          "when": "Build, launch, or debug on iOS Simulator and XcodeBuildMCP tools are available."
+        },
+        {
+          "plugin": "build-ios-apps",
+          "skill": "ios-app-intents",
+          "when": "The app exposes App Intents."
+        }
+      ],
+      "notes": "Composition remains subject to each profile condition. SwiftData, Core Data, concurrency, testing, performance, and release are separate capabilities, not an all-skills bundle."
+    },
+    {
+      "id": "macos-app",
+      "activation": "automatic",
+      "evidenceAny": [
+        "*.xcodeproj",
+        "*.xcworkspace",
+        "Package.swift"
+      ],
+      "requiresEvidence": [
+        "A macOS application target is confirmed; a Swift command-line target is insufficient."
+      ],
+      "sources": [],
+      "composeProfiles": [
+        "swift",
+        "apple-ui-design"
+      ],
+      "optionalProfiles": {
+        "swiftui": "SwiftUI imports or requested adoption.",
+        "apple-platform-runtime": "The project uses Xcode build/debug tooling."
+      },
+      "availablePluginAlternatives": [
+        {
+          "plugin": "build-macos-apps",
+          "skill": "build-run-debug",
+          "when": "Building or debugging the macOS application."
+        },
+        {
+          "plugin": "build-macos-apps",
+          "skill": "swiftpm-macos",
+          "when": "The macOS app is packaged through SwiftPM."
+        }
+      ]
     }
-  ]
+  ],
+  "selectionPolicy": {
+    "automatic": "Recommend from verified project evidence; never automatically install.",
+    "intent": "Recommend only for an explicitly requested or configured capability.",
+    "requiresEvidence": "All stated semantic requirements must be confirmed; filename matches alone are insufficient.",
+    "sources": "Candidates, not an instruction to install every entry. Select one provider per capability."
+  }
 }

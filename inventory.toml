@@ -51,16 +51,6 @@ license_status = "unresolved"
 path = "skills/bounded-work-session"
 
 [[skill]]
-directory = "codebase-inspection"
-install_name = "codebase-inspection"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/codebase-inspection"
-
-[[skill]]
 directory = "configuring-dependabot"
 install_name = "configuring-dependabot"
 category = "agent-development"
@@ -141,16 +131,6 @@ license_status = "unresolved"
 path = "skills/done"
 
 [[skill]]
-directory = "gemini-large-context"
-install_name = "gemini-large-context"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/gemini-large-context"
-
-[[skill]]
 directory = "gh-cli"
 install_name = "gh-cli"
 category = "agent-development"
@@ -169,16 +149,6 @@ provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
 path = "skills/git-master"
-
-[[skill]]
-directory = "happy-path-use-case-design"
-install_name = "happy-path-use-case-design"
-category = "agent-development"
-source_type = "local"
-provenance = "verified-local"
-customization_status = "local"
-license_status = "unresolved"
-path = "skills/happy-path-use-case-design"
 
 [[skill]]
 directory = "hardening-github-actions"
@@ -259,21 +229,6 @@ provenance = "verified-local"
 customization_status = "local"
 license_status = "unresolved"
 path = "skills/saga"
-
-[[skill]]
-directory = "skill-doctor"
-install_name = "skill-doctor"
-category = "agent-development"
-source_type = "fork"
-provenance = "verified-upstream"
-customization_status = "amp-adapted"
-license_status = "resolved-mit"
-path = "skills/skill-doctor"
-upstream_repository = "warpdotdev/common-skills"
-upstream_path = ".agents/skills/skill-doctor"
-upstream_revision = "f589e224907eda566c13755529f59db563090d14"
-adapted_repository = "https://ampcode.com/git/@sammykins/-/skills"
-adapted_revision = "365cc485bbf33c7ecdab860c6a73087bedfc654b"
 
 [[skill]]
 directory = "spec-driven-implementation"

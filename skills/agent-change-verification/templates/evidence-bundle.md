@@ -37,7 +37,13 @@ Verifier: <agent/person/tool distinct from implementer when applicable>
 - Actual outcome:
 - Trace/video/screenshots/logs:
 
-## Visual and motion evidence
+## Static visual evidence (when applicable)
+- Screenshot paths and inspected states:
+- Expected design/reference:
+- Relevant interaction checks:
+- Findings and limitations:
+
+## Motion evidence (only for temporal claims)
 - Recording path and digest:
 - Capture method/environment/viewport/DPR:
 - Duration, dimensions, measured FPS/frame count:

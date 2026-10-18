@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "profiles": [],
+  "selections": [
+    {
+      "skill": "<exact installed name>",
+      "capability": "<one responsibility>",
+      "evidence": ["<repository-relative manifest, target or import>"],
+      "trigger": "<when this task needs the skill>",
+      "source": "<verified repository URL or plugin ID>",
+      "revision": "<resolved commit or plugin version>",
+      "delivery": "<project-install | project-copy | client-provided | global-reference>",
+      "destination": "<repository-relative path; null for client/global providers>",
+      "prerequisites": [],
+      "updateOwner": "<maintainer>",
+      "localChanges": []
+    }
+  ],
+  "omitted": [
+    {"capability": "<optional capability>", "reason": "<not used or covered by selected provider>"}
+  ]
+}

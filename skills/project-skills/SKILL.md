@@ -21,32 +21,30 @@ enablement, dependencies, and trust decisions to clients.
    - Xcode, Gradle, CI, deployment, and infrastructure configuration;
    - checked-in `.agents/skills`, `skills-lock.json`, and Agent Plugin manifests;
    - the user's requested build and delivery targets.
-3. Read `references/project-profiles.json` and select only profiles supported by
-   that evidence.
+3. Read `references/project-profiles.json` and [the selection guide](references/selection-guide.md). Select only profiles whose file evidence and semantic requirements are confirmed. `automatic` means recommendation, never automatic installation.
 4. Separate required skills from optional workflow skills. A language does not
    imply every platform or delivery capability: Swift does not by itself imply
    App Store Connect, and TypeScript does not imply Cloudflare.
-   Each profile records a source root and, at most, one preferred entry skill;
-   it does not snapshot the source's full inventory.
+   Compose the relevant capability profiles; do not install an entire language bundle. Inspect available project, global, and client/plugin skills first and avoid duplicate providers.
 5. Present the proposed source repositories, exact skill names, destination,
    and reason for each profile before installing anything.
-6. Ask before network-backed installation or writing project files.
+6. Check existing user authorization. A request to install the reviewed selection authorizes its necessary writes; do not ask again. When setup changes are not authorized, return the concrete selection for approval before installation.
 7. Install project-locally. Do not add `--global`, and do not remove a global
    copy as part of project setup.
-8. Verify the installed `SKILL.md` files, lock/manifest changes, and `git diff`.
+8. Verify the installed `SKILL.md` files, lock/manifest changes, and `git diff`. Record selected capabilities, evidence, exact source revision/version, delivery method, destination, and update owner in `.agents/project-skills.json` using [the template](references/project-selection.template.json). Do not put local machine paths or secrets in a shared project record.
 
 ## Installation policy
 
-Prefer an upstream Agent Plugin when one exists and the active client supports
-it. Otherwise install Agent Skills directly from the recorded root repository.
-For repositories supported by the `skills` CLI, the non-global shape is:
+Prefer an already available provider when it covers the task. Use a plugin only when its required scope and tools are supported by the active client. If project-scoped plugin enablement is unavailable, do not claim a global plugin became project-local: record it as client-provided, or select a portable upstream skill. Never edit or copy files out of a client-managed plugin cache. Otherwise install Agent Skills directly from the recorded root repository.
+For repositories supported by the `skills` CLI, verify the current CLI and its scope flags before using this non-global shape:
 
 ```bash
 npx --yes skills add <owner/repo> --skill <skill-name> --yes
 ```
 
 Use `--copy` only when the project intends to check the skill content into
-source control. Never invent a repository from a matching public skill name;
+source control. Keep licenses and references, pin the source revision, and record
+who updates the copy. Do not copy unchanged global workflow skills into every repo. Never invent a repository from a matching public skill name;
 verify the root through a lockfile, manifest, exact source match, or upstream
 documentation.
 

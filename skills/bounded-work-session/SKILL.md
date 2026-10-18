@@ -45,6 +45,24 @@ Repeat while the objective remains authorised and context is healthy:
 6. Commit coherent green progress.
 7. Continue to the next connected checkpoint without creating a new session merely because the checkpoint completed.
 
+## Coordination and checkpoints
+
+- Delegate only when authorized and an independent subtask adds value. Keep one
+  owner per write surface; reuse that owner for corrections instead of spawning
+  a replacement. Parallelize independent reads when the tools support it.
+- Prefer completion notifications. Wait only when dependent work is blocked;
+  use the longest useful wait permitted by the active harness, while preserving
+  required user updates. Avoid repeated short waits and unchanged status polls.
+- Call agent inventory tools only to resolve an ownership, availability, or
+  dispatch decision. Send follow-ups for changed requirements, new evidence,
+  corrections, or a concrete blocker, not requests to restate unchanged status.
+- At a meaningful checkpoint, record the revision and dirty-state scope, outcome,
+  exact checks/results, remaining items, and owner once in the existing task
+  record. Update the delta when something changes. Do not create a new record
+  for every wait or tool call.
+- After checks pass, continue toward completion. Repeat verification only when
+  relevant inputs changed, a failure remains unresolved, or fresh proof is required.
+
 ## Scope and blast radius
 
 Read broadly enough to find the real root cause. Write narrowly enough to keep the change reviewable.

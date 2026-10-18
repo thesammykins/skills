@@ -1,7 +1,7 @@
 ---
 name: systematic-debugging
 description: "4-phase root cause debugging: understand bugs before fixing."
-version: 1.2.0
+version: 1.3.0
 author: Adapted from Hermes Agent (obra/superpowers)
 license: MIT
 tags: [debugging, troubleshooting, problem-solving, root-cause, investigation]
@@ -224,12 +224,19 @@ rg "similar_pattern" src/
 
 **Fix the root cause, not the symptom:**
 
-### 1. Create Failing Test Case
+### 1. Establish Evidence of the Failure
 
-- Simplest possible reproduction
-- Automated test if possible
-- MUST have before fixing
-- Follow TDD principles
+- Reuse the simplest reliable reproduction: an existing failing test, runtime
+  interaction, sanitized log/trace, or temporary diagnostic probe.
+- Record expected versus observed behavior and the evidence supporting the root
+  cause. Do not require a new automated test file before every fix.
+- Use test-first when the behavioral contract is clear and a durable test adds
+  value. Explore first when uncertain; verification is still required after the fix.
+- Retain or extend a regression test when practical and useful for future changes,
+  especially for business rules, parsers, permissions, persistence, and concurrency.
+  Explain a material gap or alternative when automation is impractical.
+- Derive expectations from the contract or independent evidence, not from the
+  implementation under test. Avoid coverage-only tests and excessive mocking.
 
 ### 2. Implement Single Fix
 
@@ -240,13 +247,16 @@ rg "similar_pattern" src/
 
 ### 3. Verify Fix
 
-```bash
-# Run the specific regression test
-pytest tests/test_module.py::test_regression -v
+Repeat the reproduction against the corrected behavior. Run the smallest existing
+or new check that reaches the changed boundary, plus repository-required checks.
+Exercise the actual user or integration path when a unit test cannot establish
+its outcome. Use `agent-change-verification` for proportional check selection.
 
-# Run full suite — no regressions
-pytest tests/ -q
-```
+Broaden to integration checks or the full suite when the affected scope, unresolved
+failures, or repository policy warrants it; do not run everything by default.
+Reuse recorded pre-fix evidence rather than repeating sabotage merely for ceremony.
+Stop when the outcome is supported and applicable checks pass. Report the evidence
+and remaining uncertainty; do not weaken expectations to make a check green.
 
 ### 4. If Fix Doesn't Work — The Rule of Three
 
@@ -280,7 +290,7 @@ If you catch yourself thinking:
 - "Quick fix for now, investigate later"
 - "Just try changing X and see if it works"
 - "Add multiple changes, run tests"
-- "Skip the test, I'll manually verify"
+- "Skip verification; the code looks right"
 - "It's probably X, let me fix that"
 - "I don't fully understand but this might work"
 - "Pattern says X but I'll adapt it differently"
@@ -300,7 +310,7 @@ If you catch yourself thinking:
 | "Issue is simple, don't need process" | Simple issues have root causes too. Process is fast for simple bugs. |
 | "Emergency, no time for process" | Systematic debugging is FASTER than guess-and-check thrashing. |
 | "Just try this first, then investigate" | First fix sets the pattern. Do it right from the start. |
-| "I'll write test after confirming fix works" | Untested fixes don't stick. Test first proves it. |
+| "Manual verification means no regression protection is needed" | A runtime check proves the current outcome; retain useful automated protection for future changes when practical. |
 | "Multiple fixes at once saves time" | Can't isolate what worked. Causes new bugs. |
 | "Reference too long, I'll adapt the pattern" | Partial understanding guarantees bugs. Read it completely. |
 | "I see the problem, let me fix it" | Seeing symptoms ≠ understanding root cause. |
@@ -313,7 +323,7 @@ If you catch yourself thinking:
 | **1. Root Cause** | Read errors, reproduce, check changes, gather evidence, trace data flow | Understand WHAT and WHY |
 | **2. Pattern** | Find working examples, compare, identify differences | Know what's different |
 | **3. Hypothesis** | Form theory, test minimally, one variable at a time | Confirmed or new hypothesis |
-| **4. Implementation** | Create regression test, fix root cause, verify | Bug resolved, all tests pass |
+| **4. Implementation** | Fix evidenced cause, repeat reproduction, retain useful regression protection | Corrected behavior demonstrated; applicable checks pass |
 
 ## Real-World Impact
 

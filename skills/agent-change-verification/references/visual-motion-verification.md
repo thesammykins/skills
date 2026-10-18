@@ -1,10 +1,24 @@
 # Visual and Motion Verification
 
-Use this whenever a change affects animation, transition timing, scrolling, drag behavior, responsive layout, visual state, canvas/WebGL output, video, or any interaction whose correctness unfolds over time. This operationalizes the podcast pattern at 00:14:17–00:16:59 and 00:25:55–00:26:40: make the agent record the real interaction, inspect the recording, and for motion inspect frames rather than trusting a polished summary or final screenshot.
+Select evidence by the claim: static appearance can be inspected in screenshots;
+animation, transitions, scrolling, drag, video, and timing require temporal evidence.
+Canvas/WebGL alone does not imply motion; inspect static output as a static state.
 
-## Non-negotiable rule
+## Static visual changes
 
-A visual or temporal claim requires a recording of the final artifact and inspection of that recording. A still screenshot can verify a state; it cannot verify a transition. Creating a video without opening it and examining frames is not verification.
+Capture and open screenshots of the final artifact at the relevant states and
+viewports. Inspect layout, clipping, content, color, and hierarchy against the
+expected design. Exercise implicated controls, focus, and responsive behavior.
+Reuse existing visual tests if they provide useful protection. Record the artifact,
+environment, inspected states, result, and limits. No recording, FPS measurement,
+frame extraction, or new screenshot-test framework is required for a static claim.
+
+## Temporal changes
+
+A temporal claim requires a recording of the final artifact and inspection of
+that recording. A still screenshot can verify a state; it cannot verify a
+transition. Creating a video without opening it and examining relevant frames is
+not verification. The recording workflow below applies only to temporal claims.
 
 ## Capture contract
 
@@ -135,7 +149,7 @@ When using automated frame comparisons:
 - **Reduced-motion failure:** motion remains excessive or functionality disappears when reduced motion is requested.
 - **Responsive divergence:** transition works at one viewport but overlaps/jumps at another.
 
-## Evidence required for a visual PASS
+## Evidence required for a temporal PASS
 
 - original recording tied to final revision;
 - capture contract and `ffprobe` metadata (or equivalent);
