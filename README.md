@@ -59,6 +59,12 @@ pins the Node and `skills` CLI versions. `--apply` fetches each source at its
 reviewed revision and installs from that checkout, so an upstream change only
 arrives once the recorded revision is bumped.
 
+It records what it installed in `.external-skills.json` beside the skills. An
+installed external skill is only replaced when it is unchanged since then; an
+edited copy, or an older one installed some other way, is left alone and listed
+with the `--force-skill NAME` that would replace it. `verify` checks external
+skills against that record without using the network.
+
 ## Release artifacts
 
 Each tagged GitHub release contains:
@@ -83,8 +89,8 @@ format directly.
 - `.github/workflows/release.yml` — immutable releases for existing `v*` tags.
 - `PROVENANCE.md` — source and ownership boundaries.
 
-The repository currently contains 35 packaged skills and 6 externally managed
-skills. `.system` is intentionally absent because it is managed by Codex and is
+`mise run check` reports how many packaged and external skills there are.
+`.system` is intentionally absent because it is managed by Codex and is
 installation-specific.
 
 ## Develop and verify

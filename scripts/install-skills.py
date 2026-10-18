@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
 import re
 import shlex
@@ -71,11 +72,22 @@ def frontmatter_value(skill_file: Path, key: str) -> str | None:
 def skill_files(skill_root: Path) -> list[Path]:
     files: list[Path] = []
     for path in sorted(skill_root.rglob("*")):
+        if path.name == ".DS_Store":
+            continue
         if path.is_symlink():
-            raise SkillsError(f"{path.relative_to(REPO_ROOT)}: symbolic links are not packageable")
+            shown = path.relative_to(REPO_ROOT) if path.is_relative_to(REPO_ROOT) else path
+            raise SkillsError(f"{shown}: symbolic links are not packageable")
         if path.is_file():
             files.append(path)
     return files
+
+
+def installed_digest(root: Path) -> str | None:
+    """Digest of an installed skill, or None when it can't be compared."""
+    try:
+        return tree_digest(root)
+    except SkillsError:
+        return None
 
 
 def tree_digest(root: Path) -> str:
@@ -230,29 +242,62 @@ def skill_dir_in(checkout: Path, name: str) -> Path | None:
     return None
 
 
-def unchanged_or_new(sources: dict[str, Path], target: Path, *, force: bool) -> dict[str, list[str]]:
-    """Skills per repository that are safe to (re)install.
+EXTERNAL_RECORD = ".external-skills.json"
 
-    The skills CLI replaces whatever is installed. A skill whose installed copy
-    differs from the reviewed revision may hold local edits, so it is skipped
-    unless --force is given.
+
+def read_record(target: Path) -> dict[str, str]:
+    """Digest of each external skill as this installer last installed it."""
+    path = target / EXTERNAL_RECORD
+    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+
+
+def plan_external(sources: dict[str, Path], target: Path, *, force: set[str]) -> tuple[dict[str, list[str]], list[str]]:
+    """Which external skills to (re)install, and which to leave for a decision.
+
+    An installed skill is replaced only when it is unchanged since this
+    installer put it there (its digest matches the record) or the user names
+    it with --force-skill. Anything else may hold local edits, or is an older
+    copy installed some other way; both need a person to decide.
     """
-    external_manifest = load_external_manifest()
+    record = read_record(target)
     selected: dict[str, list[str]] = {}
-    for source in external_manifest["source"]:
+    held: list[str] = []
+    for source in load_external_manifest()["source"]:
         keep: list[str] = []
         for name in source["skills"]:
             installed = target / name
             pinned = skill_dir_in(sources[source["repository"]], name)
-            if installed.is_dir() and pinned is not None and not force and tree_digest(installed) != tree_digest(pinned):
-                print(f"skipping {name}: the installed copy differs from {source['repository']}@{source['reviewed_revision'][:12]}; rerun with --force to replace it")
+            if not installed.is_dir() or name in force:
+                keep.append(name)
                 continue
-            keep.append(name)
+            current = installed_digest(installed)
+            if pinned is not None and current == tree_digest(pinned):
+                continue  # already the reviewed revision
+            if current is not None and current == record.get(name):
+                keep.append(name)  # untouched since we installed it
+                continue
+            held.append(name)
         selected[source["repository"]] = keep
-    return selected
+    return selected, held
 
 
-def install_external(*, apply: bool, project: bool, agents: list[str] | None = None, force: bool = False) -> None:
+def write_record(target: Path, names: list[str]) -> None:
+    record = read_record(target)
+    for name in names:
+        if not (target / name).is_dir():
+            continue
+        digest = installed_digest(target / name)
+        if digest:
+            record[name] = digest
+    target.mkdir(parents=True, exist_ok=True)
+    (target / EXTERNAL_RECORD).write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def external_names() -> list[str]:
+    return [name for source in load_external_manifest()["source"] for name in source["skills"]]
+
+
+def install_external(*, apply: bool, project: bool, agents: list[str] | None = None, force: set[str] | None = None) -> None:
     external_manifest = load_external_manifest()
     if not apply:
         print("External skill install preview (no commands were run):")
@@ -263,6 +308,10 @@ def install_external(*, apply: bool, project: bool, agents: list[str] | None = N
         print("Run again with --apply to download and install these reviewed sources.")
         return
 
+    force = force or set()
+    unknown = sorted(force - set(external_names()))
+    if unknown:
+        raise SkillsError(f"--force-skill names unknown external skills: {', '.join(unknown)}")
     prefix = node_runner(external_manifest["tool"])
     environment = os.environ.copy()
     environment["DISABLE_TELEMETRY"] = "1"
@@ -273,14 +322,23 @@ def install_external(*, apply: bool, project: bool, agents: list[str] | None = N
             checkout = Path(temporary) / str(index)
             checkout_reviewed_revision(source["repository"], source["reviewed_revision"], checkout)
             sources[source["repository"]] = checkout
-        allowed = unchanged_or_new(sources, target, force=force)
+        selected, held = plan_external(sources, target, force=force)
+        installed: list[str] = []
         for source, command in zip(external_manifest["source"], external_commands(project=project, agents=agents, sources=sources)):
-            names = allowed[source["repository"]]
+            names = selected[source["repository"]]
             if not names:
                 continue
             start = command.index("--skill") + 1
             end = command.index("--agent")
             subprocess.run([*prefix, *command[:start], *names, *command[end:]], check=True, env=environment)
+            installed.extend(names)
+        # Skills already at the reviewed revision count as installed by us too.
+        write_record(target, [name for name in external_names() if name not in held])
+    print(f"external skills: {len(installed)} installed or updated in {target}")
+    if held:
+        print("Left alone because they differ from what this installer last installed (local edits or an older copy):")
+        for name in held:
+            print(f"  {name}: rerun with --force-skill {name} to replace it with the reviewed revision")
 
 
 def select_skills(manifest: dict, requested: list[str] | None) -> list[str]:
@@ -405,17 +463,32 @@ def install(manifest: dict, names: list[str], target: Path, *, force: bool, dry_
     print(f"installed {len(names)} skills into {target}")
 
 
-def verify(names: list[str], target: Path) -> None:
+def verify(names: list[str], target: Path, *, include_external: bool = False) -> None:
     problems: list[str] = []
     for name in names:
         destination = target / name
         if not destination.is_dir():
             problems.append(f"{name}: not installed")
+        elif installed_digest(destination) is None:
+            problems.append(f"{name}: installed copy contains a symbolic link")
         elif tree_digest(SKILLS_ROOT / name) != tree_digest(destination):
             problems.append(f"{name}: installed content differs")
+    if include_external:
+        # External skills are checked against what `external --apply` recorded,
+        # which needs no network.
+        record = read_record(target)
+        for name in external_names():
+            destination = target / name
+            if not destination.is_dir():
+                problems.append(f"{name} (external): not installed")
+            elif name not in record:
+                problems.append(f"{name} (external): not installed by `external --apply`; run it to adopt or update this copy")
+            elif installed_digest(destination) != record[name]:
+                problems.append(f"{name} (external): changed since it was installed")
     if problems:
         raise SkillsError("skills verification failed:\n  - " + "\n  - ".join(problems))
-    print(f"verified {len(names)} skills in {target}")
+    count = len(names) + (len(external_names()) if include_external else 0)
+    print(f"verified {count} skills in {target}")
 
 
 def add_target_arguments(parser: argparse.ArgumentParser) -> None:
@@ -454,7 +527,8 @@ def parse_args() -> argparse.Namespace:
         "--agent", action="append", dest="agents", metavar="NAME", help="target agent (default: all)"
     )
     external_parser.add_argument(
-        "--force", action="store_true", help="replace installed external skills that differ from the reviewed revision"
+        "--force-skill", action="append", dest="force_skills", default=[], metavar="NAME",
+        help="replace this external skill even if its installed copy differs (repeatable)",
     )
     return parser.parse_args()
 
@@ -469,14 +543,14 @@ def main() -> int:
             package(manifest, args.output)
         elif args.command == "external":
             check(manifest, quiet=True)
-            install_external(apply=args.apply, project=args.project, agents=args.agents, force=args.force)
+            install_external(apply=args.apply, project=args.project, agents=args.agents, force=set(args.force_skills))
         else:
             names = select_skills(manifest, args.skills)
             target = resolve_target(args)
             if args.command == "install":
                 install(manifest, names, target, force=args.force, dry_run=args.dry_run)
             else:
-                verify(names, target)
+                verify(names, target, include_external=not args.skills)
     except (OSError, SkillsError, subprocess.CalledProcessError, tomllib.TOMLDecodeError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
