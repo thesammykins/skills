@@ -353,8 +353,9 @@ def install_external(*, apply: bool, project: bool, agents: list[str] | None = N
             end = command.index("--agent")
             try:
                 subprocess.run([*prefix, *command[:start], *names, *command[end:]], check=True, env=environment)
-            except subprocess.CalledProcessError:
-                # A copy may be half written; mark it so a rerun replaces it.
+            except (subprocess.CalledProcessError, KeyboardInterrupt):
+                # A copy may be half written (a failed run, or Ctrl-C); mark it
+                # so a rerun replaces it instead of treating it as an edit.
                 record = read_record(target)
                 record.update({name: INCOMPLETE for name in names})
                 save_record(target, record)

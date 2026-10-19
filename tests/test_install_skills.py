@@ -238,6 +238,27 @@ class SkillsToolTests(unittest.TestCase):
             installed, _, _ = self.run_external(project)
             self.assertIn("council", installed)
 
+    def test_ctrl_c_during_external_install_is_replaced_next_time(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary)
+            target = project / ".agents/skills"
+
+            def interrupted(command, check, env):
+                (target / "council").mkdir(parents=True, exist_ok=True)
+                (target / "council/partial").write_text("half\n")
+                raise KeyboardInterrupt
+
+            with (
+                mock.patch.object(MODULE.subprocess, "run", side_effect=interrupted),
+                mock.patch.object(MODULE, "checkout_reviewed_revision", side_effect=self.fake_checkouts(project)),
+                mock.patch.object(MODULE.shutil, "which", return_value="/usr/bin/npx"),
+                mock.patch.object(MODULE.Path, "cwd", return_value=project),
+                self.assertRaises(KeyboardInterrupt),
+            ):
+                MODULE.install_external(apply=True, project=True)
+            installed, _, _ = self.run_external(project)
+            self.assertIn("council", installed)
+
     def test_corrupt_record_explains_itself(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             target = Path(temporary)
