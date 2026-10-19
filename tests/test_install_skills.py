@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import importlib.util
 import io
+import sys
 import tempfile
 import unittest
 import zipfile
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest import mock
 
@@ -136,6 +137,7 @@ class SkillsToolTests(unittest.TestCase):
             mock.patch.object(MODULE.shutil, "which", return_value="/usr/bin/npx"),
             mock.patch.object(MODULE.Path, "cwd", return_value=project),
             redirect_stdout(io.StringIO()) as output,
+            redirect_stderr(output),
         ):
             MODULE.install_external(apply=True, project=True, **kwargs)
         installed = {name for call in run.call_args_list
@@ -182,7 +184,7 @@ class SkillsToolTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary, self.assertRaises(MODULE.SkillsError):
             self.run_external(Path(temporary), force={"no-such-skill"})
 
-    def test_verify_checks_external_skills_against_the_record(self) -> None:
+    def test_verify_agrees_with_install_about_kept_external_skills(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             project = Path(temporary)
             _, _, target = self.run_external(project)
@@ -190,10 +192,70 @@ class SkillsToolTests(unittest.TestCase):
             names = MODULE.catalog_names(manifest)
             MODULE.install(manifest, names, target, force=False, dry_run=False)
             MODULE.verify(names, target, include_external=True)
+
+            # An edit install would keep: a warning naming the fix, not a failure.
             (target / "council/SKILL.md").write_text("edited\n")
-            with self.assertRaises(MODULE.SkillsError) as failure:
+            with redirect_stderr(io.StringIO()) as warnings:
                 MODULE.verify(names, target, include_external=True)
-            self.assertIn("council (external): changed since it was installed", str(failure.exception))
+            self.assertIn("--force-skill council", warnings.getvalue())
+
+            # A missing external skill still fails.
+            MODULE.shutil.rmtree(target / "review-pr")
+            with self.assertRaises(MODULE.SkillsError) as failure, redirect_stderr(io.StringIO()):
+                MODULE.verify(names, target, include_external=True)
+            self.assertIn("review-pr (external): not installed", str(failure.exception))
+
+    def test_checked_in_only_verify_ignores_external_skills(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary) / "skills"
+            manifest = MODULE.load_manifest()
+            MODULE.install(manifest, MODULE.catalog_names(manifest), target, force=False, dry_run=False)
+            result = MODULE.subprocess.run(
+                [sys.executable, str(ROOT / "scripts/install-skills.py"), "verify", "--checked-in-only", "--target", str(target)],
+                capture_output=True, text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_interrupted_external_install_is_replaced_next_time(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary)
+            target = project / ".agents/skills"
+            checkout = self.fake_checkouts(project)
+
+            def half_copy(command, check, env):
+                (target / "council").mkdir(parents=True, exist_ok=True)
+                (target / "council/partial").write_text("half\n")
+                raise MODULE.subprocess.CalledProcessError(1, command)
+
+            with (
+                mock.patch.object(MODULE.subprocess, "run", side_effect=half_copy),
+                mock.patch.object(MODULE, "checkout_reviewed_revision", side_effect=checkout),
+                mock.patch.object(MODULE.shutil, "which", return_value="/usr/bin/npx"),
+                mock.patch.object(MODULE.Path, "cwd", return_value=project),
+                self.assertRaises(MODULE.subprocess.CalledProcessError),
+            ):
+                MODULE.install_external(apply=True, project=True)
+            installed, _, _ = self.run_external(project)
+            self.assertIn("council", installed)
+
+    def test_corrupt_record_explains_itself(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            (target / MODULE.EXTERNAL_RECORD).write_text("{not json")
+            with self.assertRaises(MODULE.SkillsError) as failure:
+                MODULE.read_record(target)
+            self.assertIn("delete it", str(failure.exception))
+
+    def test_install_names_a_symlinked_installed_copy(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary)
+            manifest = MODULE.load_manifest()
+            name = MODULE.catalog_names(manifest)[0]
+            MODULE.shutil.copytree(MODULE.SKILLS_ROOT / name, target / name)
+            (target / name / "link").symlink_to("/etc/hosts")
+            with self.assertRaises(MODULE.SkillsError) as failure:
+                MODULE.install(manifest, [name], target, force=False, dry_run=False)
+            self.assertIn("contains a symbolic link", str(failure.exception))
 
     def test_verify_reports_a_symlink_instead_of_crashing(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -245,10 +245,32 @@ def skill_dir_in(checkout: Path, name: str) -> Path | None:
 EXTERNAL_RECORD = ".external-skills.json"
 
 
+INCOMPLETE = "incomplete"
+
+
 def read_record(target: Path) -> dict[str, str]:
-    """Digest of each external skill as this installer last installed it."""
+    """Digest of each external skill as this installer last installed it.
+
+    A value of "incomplete" marks a skill whose install was interrupted, so
+    the next run replaces it rather than treating it as a local edit.
+    """
     path = target / EXTERNAL_RECORD
-    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+    if not path.is_file():
+        return {}
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as error:
+        raise SkillsError(f"{path} is not valid JSON ({error}); delete it and rerun `external --apply`") from error
+    if not isinstance(record, dict):
+        raise SkillsError(f"{path} should hold an object of skill digests; delete it and rerun `external --apply`")
+    return record
+
+
+def save_record(target: Path, record: dict[str, str]) -> None:
+    target.mkdir(parents=True, exist_ok=True)
+    temporary = target / f"{EXTERNAL_RECORD}.tmp"
+    temporary.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(temporary, target / EXTERNAL_RECORD)
 
 
 def plan_external(sources: dict[str, Path], target: Path, *, force: set[str]) -> tuple[dict[str, list[str]], list[str]]:
@@ -273,8 +295,8 @@ def plan_external(sources: dict[str, Path], target: Path, *, force: set[str]) ->
             current = installed_digest(installed)
             if pinned is not None and current == tree_digest(pinned):
                 continue  # already the reviewed revision
-            if current is not None and current == record.get(name):
-                keep.append(name)  # untouched since we installed it
+            if record.get(name) == INCOMPLETE or (current is not None and current == record.get(name)):
+                keep.append(name)  # untouched since we installed it, or half-installed
                 continue
             held.append(name)
         selected[source["repository"]] = keep
@@ -289,8 +311,7 @@ def write_record(target: Path, names: list[str]) -> None:
         digest = installed_digest(target / name)
         if digest:
             record[name] = digest
-    target.mkdir(parents=True, exist_ok=True)
-    (target / EXTERNAL_RECORD).write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    save_record(target, record)
 
 
 def external_names() -> list[str]:
@@ -330,15 +351,23 @@ def install_external(*, apply: bool, project: bool, agents: list[str] | None = N
                 continue
             start = command.index("--skill") + 1
             end = command.index("--agent")
-            subprocess.run([*prefix, *command[:start], *names, *command[end:]], check=True, env=environment)
+            try:
+                subprocess.run([*prefix, *command[:start], *names, *command[end:]], check=True, env=environment)
+            except subprocess.CalledProcessError:
+                # A copy may be half written; mark it so a rerun replaces it.
+                record = read_record(target)
+                record.update({name: INCOMPLETE for name in names})
+                save_record(target, record)
+                raise
             installed.extend(names)
         # Skills already at the reviewed revision count as installed by us too.
         write_record(target, [name for name in external_names() if name not in held])
     print(f"external skills: {len(installed)} installed or updated in {target}")
     if held:
-        print("Left alone because they differ from what this installer last installed (local edits or an older copy):")
+        print("WARNING: left alone because they differ from what this installer last installed "
+              "(local edits, or an older copy installed another way):", file=sys.stderr)
         for name in held:
-            print(f"  {name}: rerun with --force-skill {name} to replace it with the reviewed revision")
+            print(f"  {name}: external --apply --force-skill {name} replaces it with the reviewed revision", file=sys.stderr)
 
 
 def select_skills(manifest: dict, requested: list[str] | None) -> list[str]:
@@ -427,11 +456,16 @@ def resolve_target(args: argparse.Namespace) -> Path:
 
 
 def differing_destinations(names: list[str], target: Path) -> list[str]:
-    return [
-        name
-        for name in names
-        if (target / name).exists() and tree_digest(SKILLS_ROOT / name) != tree_digest(target / name)
-    ]
+    differing = []
+    for name in names:
+        if not (target / name).exists():
+            continue
+        current = installed_digest(target / name)
+        if current is None:
+            differing.append(f"{name} (its installed copy contains a symbolic link)")
+        elif current != tree_digest(SKILLS_ROOT / name):
+            differing.append(name)
+    return differing
 
 
 def install(manifest: dict, names: list[str], target: Path, *, force: bool, dry_run: bool) -> None:
@@ -474,17 +508,20 @@ def verify(names: list[str], target: Path, *, include_external: bool = False) ->
         elif tree_digest(SKILLS_ROOT / name) != tree_digest(destination):
             problems.append(f"{name}: installed content differs")
     if include_external:
-        # External skills are checked against what `external --apply` recorded,
-        # which needs no network.
+        # External skills are checked against what `external --apply`
+        # recorded, offline. A copy install deliberately leaves alone (edited,
+        # or older and installed another way) is a warning, so verify agrees
+        # with install; a missing skill fails.
         record = read_record(target)
         for name in external_names():
             destination = target / name
             if not destination.is_dir():
-                problems.append(f"{name} (external): not installed")
-            elif name not in record:
-                problems.append(f"{name} (external): not installed by `external --apply`; run it to adopt or update this copy")
-            elif installed_digest(destination) != record[name]:
-                problems.append(f"{name} (external): changed since it was installed")
+                problems.append(f"{name} (external): not installed; run `external --apply`")
+            elif record.get(name) == INCOMPLETE:
+                problems.append(f"{name} (external): its last install was interrupted; run `external --apply`")
+            elif installed_digest(destination) != record.get(name):
+                print(f"warning: {name} (external) differs from what `external --apply` installed and is kept; "
+                      f"`external --apply --force-skill {name}` replaces it", file=sys.stderr)
     if problems:
         raise SkillsError("skills verification failed:\n  - " + "\n  - ".join(problems))
     count = len(names) + (len(external_names()) if include_external else 0)
@@ -513,6 +550,10 @@ def parse_args() -> argparse.Namespace:
 
     verify_parser = commands.add_parser("verify", help="verify all or selected installed skills")
     add_target_arguments(verify_parser)
+    verify_parser.add_argument(
+        "--checked-in-only", action="store_true",
+        help="skip external skills, e.g. for a freshly staged folder that has none yet",
+    )
 
     external_parser = commands.add_parser(
         "external", help="preview or install skills managed by the npx skills CLI"
@@ -550,7 +591,7 @@ def main() -> int:
             if args.command == "install":
                 install(manifest, names, target, force=args.force, dry_run=args.dry_run)
             else:
-                verify(names, target, include_external=not args.skills)
+                verify(names, target, include_external=not (args.skills or args.checked_in_only))
     except (OSError, SkillsError, subprocess.CalledProcessError, tomllib.TOMLDecodeError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1

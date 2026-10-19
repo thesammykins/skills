@@ -63,7 +63,9 @@ It records what it installed in `.external-skills.json` beside the skills. An
 installed external skill is only replaced when it is unchanged since then; an
 edited copy, or an older one installed some other way, is left alone and listed
 with the `--force-skill NAME` that would replace it. `verify` checks external
-skills against that record without using the network.
+skills against that record without using the network: a kept copy is a warning
+naming that command, a missing one fails. `verify --checked-in-only` skips
+external skills, for a freshly staged folder.
 
 ## Release artifacts
 
