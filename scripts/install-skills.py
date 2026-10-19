@@ -188,7 +188,7 @@ def external_commands(*, project: bool, agents: list[str] | None = None, sources
     """
     external_manifest = load_external_manifest()
     tool = external_manifest["tool"]
-    selected_agents = agents or ["*"]
+    selected_agents = agents or tool.get("default_agents") or ["codex"]
     commands: list[list[str]] = []
     for source in external_manifest["source"]:
         location = str((sources or {}).get(source["repository"], source["repository"]))

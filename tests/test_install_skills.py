@@ -84,7 +84,12 @@ class SkillsToolTests(unittest.TestCase):
         self.assertIn("warpdotdev/common-skills", commands[0])
         self.assertIn("council", commands[0])
         self.assertEqual(commands[0][-1], "--global")
-        self.assertIn("*", commands[0])
+        # Only the shared folder: "*" would scatter folders for every known
+        # agent across $HOME.
+        agent = commands[0].index("--agent")
+        self.assertEqual(commands[0][agent + 1], "codex")
+        self.assertEqual(commands[0][agent + 2], "--yes")
+        self.assertNotIn("*", commands[0])
 
     def fake_checkouts(self, root: Path, edited: set[str] = frozenset()):
         """Stand-in for checkout_reviewed_revision that writes each pinned skill."""

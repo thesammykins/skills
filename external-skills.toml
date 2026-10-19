@@ -1,6 +1,10 @@
 [tool]
 node_package = "node@22"
 skills_package = "skills@1.5.16"
+# Install into the shared ~/.agents/skills only. Codex reads it directly, and
+# new-mac links Claude Code's and opencode's skills folders to it. "*" would
+# make the CLI create a folder for every agent it knows (dozens) in $HOME.
+default_agents = ["codex"]
 
 [[source]]
 repository = "warpdotdev/common-skills"

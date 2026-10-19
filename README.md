@@ -47,14 +47,16 @@ Preview the reviewed `npx skills` commands without downloading anything:
 mise exec -- python scripts/install-skills.py external
 ```
 
-Install those skills globally for every supported agent harness:
+Install those skills into the shared `~/.agents/skills` (the default agent in
+`external-skills.toml`; Claude Code and opencode reach it through links):
 
 ```bash
 mise exec -- python scripts/install-skills.py external --apply
 ```
 
 Pass `--project` for a project-local install, or repeat `--agent NAME` to target
-specific harnesses. `external-skills.toml` groups skills by verified source and
+other harnesses. Avoid `--agent '*'`: it creates a folder in your home for
+every agent the CLI knows. `external-skills.toml` groups skills by verified source and
 pins the Node and `skills` CLI versions. `--apply` fetches each source at its
 reviewed revision and installs from that checkout, so an upstream change only
 arrives once the recorded revision is bumped.
