@@ -5,6 +5,10 @@ python = "3.13.12"
 description = "Validate the skills catalog and run its tests."
 run = "python3 scripts/install-skills.py check && python3 -m unittest discover -s tests -v"
 
+[tasks.check-cli]
+description = "Run the real skills CLI in a throwaway HOME and check it only writes ~/.agents/skills (needs network once)."
+run = "python3 tests/cli_integration.py"
+
 [tasks.install]
 description = "Install all or selected checked-in skills."
 run = "python3 scripts/install-skills.py install \"$@\""

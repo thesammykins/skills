@@ -55,8 +55,9 @@ mise exec -- python scripts/install-skills.py external --apply
 ```
 
 Pass `--project` for a project-local install, or repeat `--agent NAME` to target
-other harnesses. Avoid `--agent '*'`: it creates a folder in your home for
-every agent the CLI knows. `external-skills.toml` groups skills by verified source and
+other harnesses. `--agent '*'` is refused: it would create a folder in your
+home for every agent the CLI knows. `mise run check-cli` runs the real CLI in a
+throwaway home and confirms the default only writes `~/.agents/skills`. `external-skills.toml` groups skills by verified source and
 pins the Node and `skills` CLI versions. `--apply` fetches each source at its
 reviewed revision and installs from that checkout, so an upstream change only
 arrives once the recorded revision is bumped.

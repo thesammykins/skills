@@ -189,6 +189,10 @@ def external_commands(*, project: bool, agents: list[str] | None = None, sources
     external_manifest = load_external_manifest()
     tool = external_manifest["tool"]
     selected_agents = agents or tool.get("default_agents") or ["codex"]
+    if "*" in selected_agents:
+        # "*" makes the skills CLI create a folder in $HOME for every agent it
+        # knows (dozens), whether or not it is installed. Name agents instead.
+        raise SkillsError("--agent '*' is not allowed: it creates folders for every known agent in your home; name the agents you use")
     commands: list[list[str]] = []
     for source in external_manifest["source"]:
         location = str((sources or {}).get(source["repository"], source["repository"]))

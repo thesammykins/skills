@@ -100,6 +100,14 @@ class SkillsToolTests(unittest.TestCase):
                 (destination / "skills" / name / "SKILL.md").write_text(f"---\nname: {name}\n---\npinned\n")
         return checkout
 
+    def test_all_agents_is_refused(self) -> None:
+        with self.assertRaises(MODULE.SkillsError) as refused:
+            MODULE.external_commands(project=False, agents=["*"])
+        self.assertIn("name the agents you use", str(refused.exception))
+
+    def test_manifest_default_targets_only_the_shared_folder(self) -> None:
+        self.assertEqual(MODULE.load_external_manifest()["tool"]["default_agents"], ["codex"])
+
     def test_external_install_only_runs_with_apply(self) -> None:
         with tempfile.TemporaryDirectory() as temporary, mock.patch.object(MODULE.subprocess, "run") as run:
             MODULE.install_external(apply=False, project=True, agents=["codex"])
