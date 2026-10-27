@@ -171,6 +171,16 @@ license_status = "unresolved"
 path = "skills/done"
 
 [[skill]]
+directory = "edit-team-videos"
+install_name = "edit-team-videos"
+category = "agent-development"
+source_type = "local"
+provenance = "verified-local"
+customization_status = "local"
+license_status = "unresolved"
+path = "skills/edit-team-videos"
+
+[[skill]]
 directory = "free-disk-space"
 install_name = "free-disk-space"
 category = "agent-development"

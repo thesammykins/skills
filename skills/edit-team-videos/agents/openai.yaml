@@ -1,0 +1,4 @@
+interface:
+  display_name: "Edit Team Videos"
+  short_description: "Polish walkthroughs with required filler and privacy review"
+  default_prompt: "Use $edit-team-videos to polish this walkthrough, preserving useful speech and a natural ending, and complete the required filler and privacy checks before delivering."
